@@ -62,12 +62,23 @@ const restaurantData = {
   ]
 };
 
+// ====== DEBUGGING ======
+console.log('RestaurantData loaded:', restaurantData);
+
 // ====== RENDER AREA CARDS ======
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded');
+  renderAreas();
+});
+
+function renderAreas() {
+  console.log('renderAreas called');
   const areasDiv = document.getElementById('areas');
+  if (!areasDiv) { console.error('#areas not found'); return; }
   areasDiv.innerHTML = '';
 
   Object.keys(restaurantData).forEach(area => {
+    console.log('Adding area:', area);
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
@@ -77,20 +88,24 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('click', () => selectArea(area));
     areasDiv.appendChild(card);
   });
-});
+}
 
-// ====== PHASE 2: HEALTH-LEVEL ======
+// ====== PHASE 2: Health-level ======
 function selectArea(area) {
-  document.getElementById('area-section').hidden = true;
-  document.getElementById('category-section').hidden = false;
+  console.log('selectArea:', area);
+  document.getElementById('area-section').setAttribute('hidden','');
+  document.getElementById('category-section').removeAttribute('hidden');
   renderHealthOptions(area);
 }
 
 function renderHealthOptions(area) {
+  console.log('renderHealthOptions:', area);
   const optionsDiv = document.getElementById('health-options');
+  if (!optionsDiv) { console.error('#health-options not found'); return; }
   optionsDiv.innerHTML = '';
 
   ['Healthy','Less Healthy','All'].forEach(level => {
+    console.log('  option:', level);
     const card = document.createElement('div');
     card.className = 'card';
     card.textContent = level;
@@ -99,26 +114,30 @@ function renderHealthOptions(area) {
   });
 }
 
-// ====== PHASE 3: SUBCATEGORY FILTERS ======
+// ====== PHASE 3: Subcategory filters ======
 function selectHealth(level, area) {
-  document.getElementById('category-section').hidden = true;
-  document.getElementById('subcategory-section').hidden = false;
+  console.log('selectHealth:', level, area);
+  document.getElementById('category-section').setAttribute('hidden','');
+  document.getElementById('subcategory-section').removeAttribute('hidden');
   renderSubcategories(area, level);
 }
 
 function renderSubcategories(area, level) {
+  console.log('renderSubcategories:', area, level);
   const subDiv = document.getElementById('subcategory-options');
+  if (!subDiv) { console.error('#subcategory-options not found'); return; }
   subDiv.innerHTML = '';
 
-  // Filter by cost if not 'All'
   let list = restaurantData[area] || [];
   if (level !== 'All') {
     list = list.filter(r => level === 'Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
   }
 
-  // Unique categories
   const cats = [...new Set(list.map(r => r.category))];
+  if (!cats.length) console.warn('No categories for', area, level);
+
   cats.forEach(cat => {
+    console.log('  subcategory:', cat);
     const card = document.createElement('div');
     card.className = 'card';
     card.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -128,6 +147,6 @@ function renderSubcategories(area, level) {
 }
 
 function selectSubcategory(category, area, level) {
-  console.log('Subcategory:', category, 'in', area, '/', level);
-  // TODO → Phase 4: Random picker
+  console.log('selectSubcategory:', category, area, level);
+  // TODO: Phase 4
 }
