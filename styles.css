@@ -116,6 +116,9 @@ h2 {
   display: block;
   margin: 0 auto;
 }
+#wheelcanvas {
+  background-color: white;
+}
 
 /* ─── Scratch Boxes ───────────────────────────────────────────────────────── */
 .scratch-box {
@@ -215,6 +218,58 @@ h2 {
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
+}
+/* ───── Flipped‐card images stay inside ─────────────────────────────────── */
+.card-flip .back img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+/* ───── Scratch‐box layering ───────────────────────────────────────────── */
+.scratch-box img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.scratch-box > div {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 2;
+}
+
+/* ───── Wheel canvas background ────────────────────────────────────────── */
+#wheelcanvas {
+  background-color: white;
+}
+/* ───── Flipped‐card images stay inside ─────────────────────────────────── */
+.card-flip .back img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+/* ───── Scratch‐box layering ───────────────────────────────────────────── */
+.scratch-box img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.scratch-box > div {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 2;
+}
+
+/* ───── Wheel canvas background ────────────────────────────────────────── */
+#wheelcanvas {
+  background-color: white;
 }
 
 
