@@ -104,25 +104,25 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 }
 
-/ ====== PHASE 4: Pick a Mechanic ======
- function startPicker(area, level) {
-+  console.log('3️⃣ startPicker()', area, level);
-   $('category-section').hidden = true;
-   $('picker-section').hidden   = false;
+// ====== PHASE 4: Pick a Mechanic ======
+function startPicker(area, level) {
+  $('category-section').hidden = true;
+  $('picker-section').hidden   = false;
 
-   const roll = Math.random() * 100;
-+  console.log('   roll =', roll);
-   let mech;
-   if      (roll < 10)   mech = 'wheel';
-   else if (roll < 50)   mech = 'scratch';
-   else if (roll < 90)   mech = 'cards';
-   else                  mech = 'list';
+  // decide which mechanic to run
+  const roll = Math.random() * 100;
+  let mech;
+  if      (roll < 10)   mech = 'wheel';
+  else if (roll < 50)   mech = 'scratch';
+  else if (roll < 90)   mech = 'cards';
+  else                  mech = 'list';
 
-+  console.log('   mech =', mech);
-   launchMechanic(mech, area, level);
- }
+  launchMechanic(mech, area, level);
+}
+
 // ====== DISPATCH & STUBS ======
 function launchMechanic(mech, area, level) {
+  // set heading
   $('picker-title').textContent = {
     wheel:   'Spin the Wheel!',
     scratch: 'Scratch & Win!',
@@ -139,18 +139,17 @@ function launchMechanic(mech, area, level) {
   else if (mech === 'cards')   showCards(area, level);
 }
 
+// these can stay as “coming soon” stubs for now:
 function showWheel(area, level) {
   const info = document.createElement('p');
   info.textContent = '🎡 Wheel coming soon!';
   $('picker-container').appendChild(info);
 }
-
 function showScratch(area, level) {
   const info = document.createElement('p');
   info.textContent = '💎 Scratch cards coming soon!';
   $('picker-container').appendChild(info);
 }
-
 function showCards(area, level) {
   const info = document.createElement('p');
   info.textContent = '🃏 Card pick coming soon!';
