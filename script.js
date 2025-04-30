@@ -106,15 +106,57 @@ function startPicker(area, level) {
   $('category-section').hidden = true;
   $('picker-section').hidden   = false;
 
-  // roll a number between 0–100
+  // decide which mechanic to run
   const roll = Math.random() * 100;
   let mech;
-  if (roll < 10)        mech = 'wheel';
+  if      (roll < 10)   mech = 'wheel';
   else if (roll < 50)   mech = 'scratch';
   else if (roll < 90)   mech = 'cards';
   else                  mech = 'list';
 
   launchMechanic(mech, area, level);
+}
+// ====== DISPATCH & STUBS ======
+function launchMechanic(mech, area, level) {
+  $('picker-title').textContent = {
+    wheel:   'Spin the Wheel!',
+    scratch: 'Scratch & Win!',
+    cards:   'Pick a Card!',
+    list:    'All Options:'
+  }[mech];
+
+  const container = $('picker-container');
+  container.innerHTML = '';
+
+  if      (mech === 'list')    showList(area, level);
+  else if (mech === 'wheel')   showWheel(area, level);
+  else if (mech === 'scratch') showScratch(area, level);
+  else if (mech === 'cards')   showCards(area, level);
+}
+
+function showWheel(area, level) {
+  const info = document.createElement('p');
+  info.textContent = '🎡 Wheel coming soon!';
+  $('picker-container').appendChild(info);
+}
+
+function showScratch(area, level) {
+  const info = document.createElement('p');
+  info.textContent = '💎 Scratch cards coming soon!';
+  $('picker-container').appendChild(info);
+}
+
+function showCards(area, level) {
+  const info = document.createElement('p');
+  info.textContent = '🃏 Card pick coming soon!';
+  $('picker-container').appendChild(info);
+}
+
+function getFilteredList(area, level) {
+  let list = (restaurantData[area] || []).slice();
+  if      (level === 'Healthy')     list = list.filter(r => r.avgCost <= 30000);
+  else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
+  return list;
 }
 
 function showList(area, level) {
@@ -154,37 +196,4 @@ function resetAll() {
   $('area-section').hidden     = false;
 }
 
-// ====== Wheel ======
-function showWheel(area, level) {
-  const list = getFilteredList(area, level);
-  // TODO: render an interactive canvas wheel with `list`
-  const info = document.createElement('p');
-  info.textContent = '🎡 Wheel coming soon! Pick a slice to spin.';
-  $('picker-container').appendChild(info);
-}
 
-// ====== Scratch ======
-function showScratch(area, level) {
-  const list = getFilteredList(area, level);
-  // TODO: render 3–5 scratch tiles, some blank, some with prizes/restaurants
-  const info = document.createElement('p');
-  info.textContent = '💎 Scratch cards coming soon! Scratch one to reveal.';
-  $('picker-container').appendChild(info);
-}
-
-// ====== Cards ======
-function showCards(area, level) {
-  const list = getFilteredList(area, level);
-  // TODO: render 4–6 face-down card elements to pick from
-  const info = document.createElement('p');
-  info.textContent = '🃏 Card pick coming soon! Choose wisely.';
-  $('picker-container').appendChild(info);
-}
-
-// ====== Helpers ======
-function getFilteredList(area, level) {
-  let list = (restaurantData[area] || []).slice();
-  if (level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
-  else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
-  return list;
-}
