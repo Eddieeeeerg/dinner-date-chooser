@@ -76,3 +76,36 @@ h2 {
   flex-direction: column;
   overflow: hidden;
 }
+
+/* scratch boxes grid */
+#picker-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.scratch-box {
+  width: 100px;
+  height: 100px;
+  background: #ffe;
+  border: 2px solid #f88;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* flip-card grid */
+.card-flip {
+  width: 100px;
+  height: 140px;
+  background: #eef;
+  border: 2px solid #88f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
