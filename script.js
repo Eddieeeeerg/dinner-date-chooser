@@ -65,99 +65,90 @@ const restaurantData = {
 // ====== DEBUGGING ======
 console.log('RestaurantData loaded:', restaurantData);
 
-// ====== UTILITY ======
-function $(id) { return document.getElementById(id); }
+// ====== INITIALIZATION ======
+window.addEventListener('DOMContentLoaded', () => {
+  renderAreas();
+  $('reset-btn').addEventListener('click', resetAll);
+});
 
-// ====== PHASE 1: Area selection ======
-window.addEventListener('DOMContentLoaded', () => renderAreas());
+// ====== PHASE 1: Render Area Cards ======
 function renderAreas() {
-  const div = $('areas'); div.innerHTML = '';
+  const container = $('areas');
+  container.innerHTML = '';
+
   Object.keys(restaurantData).forEach(area => {
-    const card = document.createElement('div'); card.className = 'card';
-    card.innerHTML = `<img src="images/${area.toLowerCase()}.jpg" alt="${area}"/><p>${area}</p>`;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="images/${area.toLowerCase()}.jpg" alt="${area}" />
+      <p>${area}</p>
+    `;
     card.onclick = () => chooseHealth(area);
-    div.appendChild(card);
+    container.appendChild(card);
   });
 }
 
-// ====== PHASE 2: Health-level selection ======
+// ====== PHASE 2: Choose Healthy/Less/All ======
 function chooseHealth(area) {
-  $('area-section').hidden = true;
+  $('area-section').hidden     = true;
   $('category-section').hidden = false;
-  const opts = ['Healthy','Less Healthy','All'];
-  const div = $('health-options'); div.innerHTML = '';
-  opts.forEach(level => {
-    const card = document.createElement('div'); card.className='card';
+
+  const container = $('health-options');
+  container.innerHTML = '';
+  ['Healthy','Less Healthy','All'].forEach(level => {
+    const card = document.createElement('div');
+    card.className = 'card';
     card.textContent = level;
     card.onclick = () => startPicker(area, level);
-    div.appendChild(card);
+    container.appendChild(card);
   });
 }
 
-// ====== PHASE 4: Random Picker ======
+// ====== PHASE 4: Random Picker (List Only) ======
 function startPicker(area, level) {
-  // hide the health-choice UI
-  document.getElementById('category-section').hidden = true;
-  // reveal the picker UI
-  document.getElementById('picker-section').hidden  = false;
-
-  // always use the list mechanic
-  launchMechanic('list', area, level);
+  $('category-section').hidden = true;
+  $('picker-section').hidden   = false;
+  showList(area, level);
 }
 
-
-function launchMechanic(type, area, level) {
-  // Set picker title
-  $('picker-title').textContent = {
-    wheel: 'Spin the Wheel!',
-    scratch: 'Scratch & Win!',
-    cards: 'Pick a Card!',
-    list: 'All Options:'
-  }[type];
-
+function showList(area, level) {
   const container = $('picker-container');
   container.innerHTML = '';
 
-  // Filter restaurants by health level
-  let list = restaurantData[area] || [];
-  if (level !== 'All') {
-    list = list.filter(r => level === 'Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
+  let list = (restaurantData[area] || []).slice();
+  if (level === 'Healthy') {
+    list = list.filter(r => r.avgCost <= 30000);
+  } else if (level === 'Less Healthy') {
+    list = list.filter(r => r.avgCost > 30000);
   }
 
-  if (type === 'list') {
-    // Show all options as cards
-    list.forEach(r => {
-      const card = document.createElement('div'); card.className = 'card';
-      card.innerHTML = `
-        <img src="${r.img}" alt="${r.name}" />
-        <p>${r.name}</p>
-      `;
-      card.onclick = () => showDetails(r);
-      container.appendChild(card);
-    });
-  } else {
-    // Placeholder for other mechanics
-    const msg = document.createElement('p');
-    msg.textContent = `"${type}" mechanic coming soon!`;
-    container.appendChild(msg);
-  }
+  list.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${r.img}" alt="${r.name}" />
+      <p>${r.name}</p>
+    `;
+    card.onclick = () => showDetails(r);
+    container.appendChild(card);
+  });
 }
 
+// ====== SHOW DETAILS ======
 function showDetails(r) {
-  // Simple detail popup
-  const details = `Name: ${r.name}
-Price: ${r.avgCost}
-Open: ${r.open} - ${r.close}${r.url ? `
-Link: ${r.url}` : ''}`;
-  alert(details);
+  const info = [
+    `Name: ${r.name}`,
+    `Price: ₩${r.avgCost}`,
+    `Time: ${r.open} - ${r.close}`
+  ];
+  if (r.url) info.push(`Link: ${r.url}`);
+  alert(info.join('
+'));
 }
 
-// ====== RESET ======
-$('reset-btn').onclick = () => {
-  $('picker-section').hidden = true;
-  $('area-section').hidden = false;
-};
-$('reset-btn').onclick = () => {
-  $('picker-section').hidden = true;
-  $('area-section').hidden = false;
-};
+// ====== RESET BACK ======
+function resetAll() {
+  $('picker-section').hidden   = true;
+  $('category-section').hidden = true;
+  $('area-section').hidden     = false;
+}
