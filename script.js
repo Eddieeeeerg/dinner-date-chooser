@@ -1,5 +1,6 @@
 // script.js
-
+// ====== UTILITY ======
+const $ = id => document.getElementById(id);
 // ====== PHASE 1: Restaurant data ======
 const restaurantData = {
   "Coex": [
@@ -62,27 +63,6 @@ const restaurantData = {
   ]
 };
 
-// ====== DEBUGGING ======
-console.log('RestaurantData loaded:', restaurantData);
-
-// ====== UTILITY ======
-const $ = id => document.getElementById(id);
-
-// ====== PHASE 1: Restaurant Data ======
-const restaurantData = {
-  "Coex": [
-    { name: "KFC Coex Mall",      category: "fastFood", avgCost: 25000, img: "images/kfc-coex.jpg", open: "10:30", close: "22:00", url: "https://naver.me/GKUf5aQz" },
-    { name: "Shake Shack Coex",   category: "fastFood", avgCost: 30000, img: "images/shakeshack-coex.jpg", open: "10:30", close: "22:00", url: "https://naver.me/GHvbZ6hz" },
-    // … include all other Coex entries …
-  ],
-  "Jamsil": [ /* … */ ],
-  "DDP":    [ /* … */ ],
-  "Sangwangsimni": [ /* … */ ],
-  "Wangsimni": [ /* … */ ],
-  "Hongdae": [ /* … */ ],
-  "Itaewon": [ /* … */ ]
-};
-
 // ====== INITIALIZATION ======
 window.addEventListener('DOMContentLoaded', () => {
   renderAreas();
@@ -130,7 +110,6 @@ function startPicker(area, level) {
 }
 
 function showList(area, level) {
-  // set the header
   $('picker-title').textContent = 'All Options:';
   const container = $('picker-container');
   container.innerHTML = '';
@@ -162,10 +141,11 @@ function showDetails(r) {
     `Time: ${r.open} - ${r.close}`
   ];
   if (r.url) info.push(`Link: ${r.url}`);
-  alert(info.join('\n'));
+  alert(info.join('
+'));
 }
 
-// ====== RESET BACK ======
+// ====== RESET ======
 function resetAll() {
   $('picker-section').hidden   = true;
   $('category-section').hidden = true;
