@@ -62,26 +62,11 @@ const restaurantData = {
   ]
 };
 
-// ====== PHASE 1: Restaurant data ======
-const restaurantData = {
-  /* ... your full data object ... */
-};
-
-// ====== INITIALIZE ON LOAD ======
-function init() {
-  renderAreas();
-}
-
-if (document.readyState !== 'loading') {
-  init();
-} else {
-  document.addEventListener('DOMContentLoaded', init);
-}
-
-// ====== PHASE 1: Area cards ======
-function renderAreas() {
+// ====== RENDER AREA CARDS ======
+document.addEventListener('DOMContentLoaded', () => {
   const areasDiv = document.getElementById('areas');
   areasDiv.innerHTML = '';
+
   Object.keys(restaurantData).forEach(area => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -92,9 +77,9 @@ function renderAreas() {
     card.addEventListener('click', () => selectArea(area));
     areasDiv.appendChild(card);
   });
-}
+});
 
-// ====== PHASE 2: Health-level ======
+// ====== PHASE 2: HEALTH-LEVEL ======
 function selectArea(area) {
   document.getElementById('area-section').hidden = true;
   document.getElementById('category-section').hidden = false;
@@ -104,6 +89,7 @@ function selectArea(area) {
 function renderHealthOptions(area) {
   const optionsDiv = document.getElementById('health-options');
   optionsDiv.innerHTML = '';
+
   ['Healthy','Less Healthy','All'].forEach(level => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -113,7 +99,7 @@ function renderHealthOptions(area) {
   });
 }
 
-// ====== PHASE 3: Subcategory filters ======
+// ====== PHASE 3: SUBCATEGORY FILTERS ======
 function selectHealth(level, area) {
   document.getElementById('category-section').hidden = true;
   document.getElementById('subcategory-section').hidden = false;
@@ -123,12 +109,14 @@ function selectHealth(level, area) {
 function renderSubcategories(area, level) {
   const subDiv = document.getElementById('subcategory-options');
   subDiv.innerHTML = '';
-  // Filter restaurants by health level
+
+  // Filter by cost if not 'All'
   let list = restaurantData[area] || [];
   if (level !== 'All') {
-    list = list.filter(r => level==='Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
+    list = list.filter(r => level === 'Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
   }
-  // Extract unique categories
+
+  // Unique categories
   const cats = [...new Set(list.map(r => r.category))];
   cats.forEach(cat => {
     const card = document.createElement('div');
