@@ -139,8 +139,8 @@ function showDetails(r) {
     `Time: ${r.open} - ${r.close}`
   ];
   if (r.url) info.push(`Link: ${r.url}`);
-  alert(info.join('
-'));
+  alert(info.join('\n'));
+
 }
 
 // ====== RESET ======
