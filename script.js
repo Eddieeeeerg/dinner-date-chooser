@@ -1,4 +1,5 @@
 // script.js
+console.log('🔥 script.js loaded');
 // ====== UTILITY ======
 const $ = id => document.getElementById(id);
 
@@ -71,8 +72,9 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====== PHASE 1: Render Area Cards ======
-function renderAreas() {
-  const container = $('areas');
+ function renderAreas() {
++  console.log('1️⃣ renderAreas()');
+   const container = $('areas');
   container.innerHTML = '';
   Object.keys(restaurantData).forEach(area => {
     const card = document.createElement('div');
@@ -87,9 +89,10 @@ function renderAreas() {
 }
 
 // ====== PHASE 2: Choose Healthy/Less/All ======
-function chooseHealth(area) {
-  $('area-section').hidden     = true;
-  $('category-section').hidden = false;
+ function chooseHealth(area) {
++  console.log('2️⃣ chooseHealth()', area);
+   $('area-section').hidden     = true;
+   $('category-section').hidden = false;
   const container = $('health-options');
   container.innerHTML = '';
   ['Healthy', 'Less Healthy', 'All'].forEach(level => {
@@ -101,21 +104,23 @@ function chooseHealth(area) {
   });
 }
 
-// ====== PHASE 4: Pick a Mechanic ======
-function startPicker(area, level) {
-  $('category-section').hidden = true;
-  $('picker-section').hidden   = false;
+/ ====== PHASE 4: Pick a Mechanic ======
+ function startPicker(area, level) {
++  console.log('3️⃣ startPicker()', area, level);
+   $('category-section').hidden = true;
+   $('picker-section').hidden   = false;
 
-  // decide which mechanic to run
-  const roll = Math.random() * 100;
-  let mech;
-  if      (roll < 10)   mech = 'wheel';
-  else if (roll < 50)   mech = 'scratch';
-  else if (roll < 90)   mech = 'cards';
-  else                  mech = 'list';
+   const roll = Math.random() * 100;
++  console.log('   roll =', roll);
+   let mech;
+   if      (roll < 10)   mech = 'wheel';
+   else if (roll < 50)   mech = 'scratch';
+   else if (roll < 90)   mech = 'cards';
+   else                  mech = 'list';
 
-  launchMechanic(mech, area, level);
-}
++  console.log('   mech =', mech);
+   launchMechanic(mech, area, level);
+ }
 // ====== DISPATCH & STUBS ======
 function launchMechanic(mech, area, level) {
   $('picker-title').textContent = {
