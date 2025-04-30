@@ -2,14 +2,14 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  background-color: #ffeef8;     /* Soft pink backdrop */
+  background-color: #ffeef8;
   color: #333;
   padding: 20px;
 }
 header h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #d6336c;                /* Rich pink title */
+  color: #d6336c;
   font-size: 2.4rem;
 }
 h2 {
@@ -27,7 +27,7 @@ h2 {
 
 /* Card styles */
 .card {
-  background-color: #fff0f6;     /* Very light pink */
+  background-color: #fff0f6;
   border: 2px solid #fcb1cc;
   border-radius: 12px;
   padding: 12px;
@@ -51,7 +51,6 @@ h2 {
   color: #a61e4d;
 }
 
-/* Phase 2 spacing */
-#category-section {
-  margin-top: 40px;
-}
+/* Phase spacing */
+#category-section { margin-top: 40px; }
+#subcategory-section { margin-top: 40px; }
