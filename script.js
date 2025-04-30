@@ -1,7 +1,8 @@
 // script.js
 // ====== UTILITY ======
 const $ = id => document.getElementById(id);
-// ====== PHASE 1: Restaurant data ======
+
+// ====== PHASE 1: Restaurant Data ======
 const restaurantData = {
   "Coex": [
     { name: "KFC Coex Mall",           category: "fastFood",    avgCost: 25000, weight: 2, url: "https://naver.me/GKUf5aQz", img: "images/kfc-coex.jpg",           open: "10:30", close: "22:00" },
@@ -69,8 +70,7 @@ window.addEventListener('DOMContentLoaded', () => {
   $('reset-btn').addEventListener('click', resetAll);
 });
 
-// ====== PHASE 1: Render Area Cards ======
-function renderAreas() {
+function renderAreas()() {
   const container = $('areas');
   container.innerHTML = '';
 
