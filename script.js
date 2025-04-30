@@ -62,28 +62,41 @@ const restaurantData = {
   ]
 };
 
-// Render area cards
-function renderAreas() {
+// Phase 1: Render area cards into #areas
+document.addEventListener('DOMContentLoaded', () => {
   const areasDiv = document.getElementById('areas');
   Object.keys(restaurantData).forEach(area => {
     const card = document.createElement('div');
     card.className = 'card';
-    const img = document.createElement('img');
-    // You can use a generic placeholder or a dedicated area image
-    img.src = `images/${area.toLowerCase()}.jpg`;
-    img.alt = area;
-    const name = document.createElement('p');
-    name.textContent = area;
-    card.append(img, name);
+    card.innerHTML = `
+      <img src="images/${area.toLowerCase()}.jpg" alt="${area}" />
+      <p>${area}</p>
+    `;
     card.addEventListener('click', () => selectArea(area));
     areasDiv.appendChild(card);
   });
-}
+});
 
-// Placeholder for next steps
+// Phase 2: Area selected → show health options
 function selectArea(area) {
-  console.log('Selected area:', area);
-  // TODO: hide #area-section and show #category-section
+  document.getElementById('area-section').hidden = true;
+  document.getElementById('category-section').hidden = false;
+  renderHealthOptions(area);
 }
 
-document.addEventListener('DOMContentLoaded', renderAreas);
+function renderHealthOptions(area) {
+  const optionsDiv = document.getElementById('health-options');
+  ['Healthy', 'Less Healthy', 'All'].forEach(level => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.textContent = level;
+    card.addEventListener('click', () => selectHealth(level, area));
+    optionsDiv.appendChild(card);
+  });
+}
+
+// Phase 2: Health option picked
+function selectHealth(level, area) {
+  console.log('Selected:', level, 'in', area);
+  // TODO → Phase 3: subcategories & random picker
+}
