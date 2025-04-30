@@ -144,20 +144,140 @@ function launchMechanic(mech, area, level) {
 }
 
 function showWheel(area, level) {
-  const p = document.createElement('p');
-  p.textContent = '🎡 Wheel coming soon!';
-  $('picker-container').appendChild(p);
+  const container = $('picker-container');
+  container.innerHTML = '';
+
+  // get filtered list & random spins
+  const list    = getFilteredList(area, level);
+  let remaining = Math.floor(Math.random() * 7) + 1;
+
+  // header
+  const info = document.createElement('p');
+  info.textContent = `You have ${remaining} spin(s). Click “Spin” to try.`;
+  container.appendChild(info);
+
+  // Spin button
+  const btn = document.createElement('button');
+  btn.textContent = '🎡 Spin';
+  btn.className = 'action-btn';
+  container.appendChild(btn);
+
+  btn.onclick = () => {
+    if (remaining <= 0) {
+      alert('No spins left!');
+      return;
+    }
+    // pick and show
+    const choice = list[Math.floor(Math.random() * list.length)];
+    showDetails(choice);
+    remaining--;
+    info.textContent = `Spins left: ${remaining}`;
+  };
 }
 function showScratch(area, level) {
-  const p = document.createElement('p');
-  p.textContent = '💎 Scratch cards coming soon!';
-  $('picker-container').appendChild(p);
+  const container = $('picker-container');
+  container.innerHTML = '';
+
+  // 1) pick 3 restaurants
+  const list     = getFilteredList(area, level);
+  const sample   = shuffle(list).slice(0, 3);
+
+  // 2) prize messages (you can edit this array at will)
+  const prizes = [
+    'You won a parrot kiss from Eddie',
+    'You won a hug from Eddie',
+    'You must kiss Eddie on the cheek right now',
+    'You are awesome Ellie',
+    'I love you Ellie',
+    'Marry me?',
+    'Cool stuff',
+    'Ok choose again',
+    '사랑해 Ellie',
+    '귀여워',
+  ];
+  shuffle(prizes);
+
+  // 3) build a mixed array of 3 restaurants + 3 prizes + (optional blanks if you like)
+  const slots = shuffle([
+    ...sample.map(r => ({type: 'rest',  data: r})),
+    ...prizes.slice(0, 3).map(p => ({type: 'prize', data: p}))
+  ]);
+
+  // 4) render boxes
+  slots.forEach(slot => {
+    const box = document.createElement('div');
+    box.className = 'scratch-box';
+    box.textContent = '⬜';
+    box.onclick = () => {
+      if (box.dataset.revealed) return;
+      box.dataset.revealed = '1';
+
+      if (slot.type === 'rest') {
+        box.textContent = slot.data.name;
+        showDetails(slot.data);
+      } else {
+        box.textContent = slot.data;
+        alert(slot.data);
+      }
+    };
+    container.appendChild(box);
+  });
 }
 function showCards(area, level) {
-  const p = document.createElement('p');
-  p.textContent = '🃏 Card pick coming soon!';
-  $('picker-container').appendChild(p);
+  const container = $('picker-container');
+  container.innerHTML = '';
+
+  // 1) pick 4 restaurants + 2 prizes
+  const list     = getFilteredList(area, level);
+  const sample   = shuffle(list).slice(0, 4);
+  const prizes   = [
+    'You are my favorite person ever Ellie',
+    'You are cute',
+    'Ellie Rodriguez',
+    'Noah and Elsie will be cute',
+    'Hello?',
+    '내 사랑 뿜뿜'
+  ];
+  shuffle(prizes);
+
+  const cards = shuffle([
+    ...sample.map(r => ({type: 'rest',  data: r})),
+    ...prizes.slice(0, 2).map(p => ({type: 'prize', data: p}))
+  ]);
+
+  // 2) render
+  cards.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'card-flip';
+    card.textContent = '🂠';                // back of card
+    card.dataset.index = i;
+    container.appendChild(card);
+
+    card.onclick = () => {
+      if (card.dataset.revealed) return;
+      card.dataset.revealed = '1';
+      if (c.type === 'rest') {
+        card.textContent = c.data.name;
+        showDetails(c.data);
+      } else {
+        card.textContent = c.data;
+        alert(c.data);
+      }
+      // after 30 s, flip the rest
+      setTimeout(() => {
+        container.querySelectorAll('.card-flip').forEach(other => {
+          if (!other.dataset.revealed) {
+            const idx = +other.dataset.index;
+            const cd  = cards[idx];
+            other.textContent = cd.type === 'rest' ? cd.data.name : cd.data;
+            other.dataset.revealed = '1';
+          }
+        });
+      }, 30000);
+    };
+  });
 }
+
 
 function getFilteredList(area, level) {
   let list = (restaurantData[area] || []).slice();
@@ -203,4 +323,12 @@ function resetAll() {
   $('area-section').hidden     = false;
 }
 
+// ====== HELPER: Fisher–Yates shuffle ======
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
 
