@@ -98,14 +98,10 @@ function chooseHealth(area) {
 function startPicker(area, level) {
   $('category-section').hidden = true;
   $('picker-section').hidden = false;
-  // Decide which mechanic
-  const roll = Math.random() * 100;
-  let mech;
-  if (roll < 10) mech = 'wheel';
-  else if (roll < 50) mech = 'scratch';
-  else if (roll < 90) mech = 'cards';
-  else mech = 'list';
+  // For now, always show the full list mechanic
+  const mech = 'list';
   launchMechanic(mech, area, level);
+}
 }
 
 function launchMechanic(type, area, level) {
