@@ -158,7 +158,15 @@ function showWheel(area, level) {
   canvas.style.display = 'block';
 
   const list     = getFilteredList(area, level);
-  const segments = list.map(r => ({ text: r.name }));
+  -  const segments = list.map(r => ({ text: r.name }));
++  // color each slice and darken its text
++  const colors = ['#ffb3c1','#ffe5b4','#d0f4de','#bde0fe','#f0c6fa','#c9c9ff'];
++  const segments = list.map((r,i) => ({
++    text:          r.name,
++    fillStyle:     colors[i % colors.length],
++    textFillStyle: '#333'
++  }));
+
   while (segments.length < 6) segments.push({ text: 'Bonus!' });
 
   if (window.wheel) window.wheel.stopAnimation(false);
