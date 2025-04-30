@@ -96,13 +96,15 @@ function chooseHealth(area) {
 
 // ====== PHASE 4: Random Picker ======
 function startPicker(area, level) {
-  $('category-section').hidden = true;
-  $('picker-section').hidden = false;
-  // For now, always show the full list mechanic
-  const mech = 'list';
-  launchMechanic(mech, area, level);
+  // hide the health-choice UI
+  document.getElementById('category-section').hidden = true;
+  // reveal the picker UI
+  document.getElementById('picker-section').hidden  = false;
+
+  // always use the list mechanic
+  launchMechanic('list', area, level);
 }
-}
+
 
 function launchMechanic(type, area, level) {
   // Set picker title
