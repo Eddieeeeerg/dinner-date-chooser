@@ -64,10 +64,10 @@ const restaurantData = {
 
 // ====== PHASE 1: Restaurant data ======
 const restaurantData = {
-  /* ... your full data object as before ... */
+  /* ... your full data object ... */
 };
 
-// Phase 1: Render area cards into #areas
+// ====== PHASE 1: Area cards ======
 document.addEventListener('DOMContentLoaded', () => {
   const areasDiv = document.getElementById('areas');
   Object.keys(restaurantData).forEach(area => {
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Phase 2: Area selected → show health options
+// ====== PHASE 2: Health-level ======
 function selectArea(area) {
   document.getElementById('area-section').hidden = true;
   document.getElementById('category-section').hidden = false;
@@ -91,7 +91,7 @@ function selectArea(area) {
 
 function renderHealthOptions(area) {
   const optionsDiv = document.getElementById('health-options');
-  ['Healthy', 'Less Healthy', 'All'].forEach(level => {
+  ['Healthy','Less Healthy','All'].forEach(level => {
     const card = document.createElement('div');
     card.className = 'card';
     card.textContent = level;
@@ -100,8 +100,33 @@ function renderHealthOptions(area) {
   });
 }
 
-// Phase 2: Health option picked
+// ====== PHASE 3: Subcategory filters ======
 function selectHealth(level, area) {
-  console.log('Selected:', level, 'in', area);
-  // TODO → Phase 3: subcategories & random picker
+  document.getElementById('category-section').hidden = true;
+  document.getElementById('subcategory-section').hidden = false;
+  renderSubcategories(area, level);
+}
+
+function renderSubcategories(area, level) {
+  // Filter restaurants by health level if needed
+  let list = restaurantData[area] || [];
+  if (level !== 'All') {
+    // Example: Healthy = avgCost <= 30000, Less Healthy = > 30000
+    list = list.filter(r => level==='Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
+  }
+  // Extract unique categories
+  const cats = [...new Set(list.map(r => r.category))];
+  const subDiv = document.getElementById('subcategory-options');
+  cats.forEach(cat => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    card.addEventListener('click', () => selectSubcategory(cat, area, level));
+    subDiv.appendChild(card);
+  });
+}
+
+function selectSubcategory(category, area, level) {
+  console.log('Subcategory:', category, 'in', area, '/', level);
+  // TODO → Phase 4: Random picker (wheel, scratch cards, cards, etc.)
 }
