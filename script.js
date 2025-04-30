@@ -67,9 +67,21 @@ const restaurantData = {
   /* ... your full data object ... */
 };
 
+// ====== INITIALIZE ON LOAD ======
+function init() {
+  renderAreas();
+}
+
+if (document.readyState !== 'loading') {
+  init();
+} else {
+  document.addEventListener('DOMContentLoaded', init);
+}
+
 // ====== PHASE 1: Area cards ======
-document.addEventListener('DOMContentLoaded', () => {
+function renderAreas() {
   const areasDiv = document.getElementById('areas');
+  areasDiv.innerHTML = '';
   Object.keys(restaurantData).forEach(area => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -80,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('click', () => selectArea(area));
     areasDiv.appendChild(card);
   });
-});
+}
 
 // ====== PHASE 2: Health-level ======
 function selectArea(area) {
@@ -91,6 +103,7 @@ function selectArea(area) {
 
 function renderHealthOptions(area) {
   const optionsDiv = document.getElementById('health-options');
+  optionsDiv.innerHTML = '';
   ['Healthy','Less Healthy','All'].forEach(level => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -108,15 +121,15 @@ function selectHealth(level, area) {
 }
 
 function renderSubcategories(area, level) {
-  // Filter restaurants by health level if needed
+  const subDiv = document.getElementById('subcategory-options');
+  subDiv.innerHTML = '';
+  // Filter restaurants by health level
   let list = restaurantData[area] || [];
   if (level !== 'All') {
-    // Example: Healthy = avgCost <= 30000, Less Healthy = > 30000
     list = list.filter(r => level==='Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
   }
   // Extract unique categories
   const cats = [...new Set(list.map(r => r.category))];
-  const subDiv = document.getElementById('subcategory-options');
   cats.forEach(cat => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -128,5 +141,5 @@ function renderSubcategories(area, level) {
 
 function selectSubcategory(category, area, level) {
   console.log('Subcategory:', category, 'in', area, '/', level);
-  // TODO → Phase 4: Random picker (wheel, scratch cards, cards, etc.)
+  // TODO → Phase 4: Random picker
 }
