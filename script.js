@@ -112,6 +112,9 @@ function startPicker(area, level) {
 }
 
 function showList(area, level) {
+  // 1) set the h2 above your cards
+  $('picker-title').textContent = 'All Options:';
+  
   const container = $('picker-container');
   container.innerHTML = '';
 
@@ -142,8 +145,8 @@ function showDetails(r) {
     `Time: ${r.open} - ${r.close}`
   ];
   if (r.url) info.push(`Link: ${r.url}`);
-  alert(info.join('
-'));
+  alert(info.join('\n'));
+
 }
 
 // ====== RESET BACK ======
