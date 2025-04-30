@@ -53,4 +53,14 @@ h2 {
 
 /* Phase spacing */
 #category-section { margin-top: 40px; }
-#subcategory-section { margin-top: 40px; } 
+#picker-section { margin-top: 40px; text-align: center; }
+#picker-container { margin: 20px 0; }
+#reset-btn {
+  background: #d6336c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#reset-btn:hover { background: #a61e4d; }
