@@ -151,14 +151,23 @@ function shuffle(array) {
   return array;
 }
 
+// ====== HELPER: Fisher–Yates shuffle ======
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 // ====== SPINNING WHEEL ======
 function showWheel(area, level) {
-  // clear old picker UI, show the canvas
+  // clear old UI, show the canvas
   $('picker-container').innerHTML = '';
   const canvas = $('wheelcanvas');
   canvas.style.display = 'block';
 
-  // build the segments
+  // build wheel segments
   const list   = getFilteredList(area, level);
   const colors = ['#ffb3c1','#ffe5b4','#d0f4de','#bde0fe','#f0c6fa','#c9c9ff'];
   const segments = list.map((r,i) => ({
@@ -171,10 +180,10 @@ function showWheel(area, level) {
     segments.push({ text: 'Bonus!', fillStyle: '#eee', textFillStyle: '#666' });
   }
 
-  // stop any old wheel
+  // stop any previous wheel
   if (window.wheel) window.wheel.stopAnimation(false);
 
-  // create a new Winwheel
+  // instantiate a new Winwheel
   window.wheel = new Winwheel({
     canvasId:     'wheelcanvas',
     outerRadius:  180,
@@ -194,7 +203,7 @@ function showWheel(area, level) {
     }
   });
 
-  // add a “Spin” button
+  // add a Spin button
   const btn = document.createElement('button');
   btn.textContent = '🎡 Spin the Wheel';
   btn.className   = 'action-btn';
@@ -202,13 +211,16 @@ function showWheel(area, level) {
   btn.onclick = () => window.wheel.startAnimation();
 }
 
-
 // ====== SCRATCH & WIN ======
 function showScratch(area, level) {
+  // hide wheel
   $('wheelcanvas').style.display = 'none';
+
+  // clear container
   const container = $('picker-container');
   container.innerHTML = '';
 
+  // pick 3 restaurants + 3 love-notes
   const list   = shuffle(getFilteredList(area, level)).slice(0, 3);
   const prizes = shuffle([
     'You won a parrot kiss from Eddie',
@@ -222,22 +234,32 @@ function showScratch(area, level) {
     '귀여워'
   ]).slice(0, 3);
 
+  // shuffle them into slots
   const slots = shuffle([
     ...list.map(r => ({ type: 'rest',  data: r })),
     ...prizes.map(p => ({ type: 'prize', data: p }))
   ]);
 
+  // render scratch-boxes
   slots.forEach((slot, i) => {
-    const box = document.createElement('div');
+    const box     = document.createElement('div');
     box.className = 'scratch-box';
+
+    // underneath image (restaurant or blank)
     const img = document.createElement('img');
-    img.src = slot.type === 'rest' ? slot.data.img : 'images/blank-scratch.jpg';
+    img.src = slot.type === 'rest'
+      ? slot.data.img
+      : 'images/blank-scratch.jpg';
     box.appendChild(img);
+
+    // overlay layer that will be scratched off
     const overlay = document.createElement('div');
     overlay.id    = `scratch-${i}`;
     box.appendChild(overlay);
+
     container.appendChild(box);
 
+    // initialize wScratchPad on the overlay
     $(`#scratch-${i}`).wScratchPad({
       size:       40,
       bg:         '#ccc',
@@ -253,6 +275,7 @@ function showScratch(area, level) {
     });
   });
 }
+
 
 // ====== FLIPPING CARDS ======
 function showCards(area, level) {
