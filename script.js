@@ -65,11 +65,6 @@ const restaurantData = {
 // ====== DEBUGGING ======
 console.log('RestaurantData loaded:', restaurantData);
 
-// ====== PHASE 1: Restaurant data ======
-const restaurantData = {
-  /* paste your full data here */
-};
-
 // ====== UTILITY ======
 function $(id) { return document.getElementById(id); }
 
@@ -114,18 +109,56 @@ function startPicker(area, level) {
 }
 
 function launchMechanic(type, area, level) {
+  // Set picker title
   $('picker-title').textContent = {
     wheel: 'Spin the Wheel!',
     scratch: 'Scratch & Win!',
     cards: 'Pick a Card!',
     list: 'All Options:'
   }[type];
-  const container = $('picker-container'); container.innerHTML = '';
-  // TODO: implement each mechanic UI (wheel vs scratch vs cards vs list)
-  // Use restaurantData[area] filtered by level, plus bonus messages.
+
+  const container = $('picker-container');
+  container.innerHTML = '';
+
+  // Filter restaurants by health level
+  let list = restaurantData[area] || [];
+  if (level !== 'All') {
+    list = list.filter(r => level === 'Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
+  }
+
+  if (type === 'list') {
+    // Show all options as cards
+    list.forEach(r => {
+      const card = document.createElement('div'); card.className = 'card';
+      card.innerHTML = `
+        <img src="${r.img}" alt="${r.name}" />
+        <p>${r.name}</p>
+      `;
+      card.onclick = () => showDetails(r);
+      container.appendChild(card);
+    });
+  } else {
+    // Placeholder for other mechanics
+    const msg = document.createElement('p');
+    msg.textContent = `"${type}" mechanic coming soon!`;
+    container.appendChild(msg);
+  }
+}
+
+function showDetails(r) {
+  // Simple detail popup
+  const details = `Name: ${r.name}
+Price: ${r.avgCost}
+Open: ${r.open} - ${r.close}${r.url ? `
+Link: ${r.url}` : ''}`;
+  alert(details);
 }
 
 // ====== RESET ======
+$('reset-btn').onclick = () => {
+  $('picker-section').hidden = true;
+  $('area-section').hidden = false;
+};
 $('reset-btn').onclick = () => {
   $('picker-section').hidden = true;
   $('area-section').hidden = false;
