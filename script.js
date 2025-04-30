@@ -62,6 +62,11 @@ const restaurantData = {
   ]
 };
 
+// ====== PHASE 1: Restaurant data ======
+const restaurantData = {
+  /* ... your full data object as before ... */
+};
+
 // Phase 1: Render area cards into #areas
 document.addEventListener('DOMContentLoaded', () => {
   const areasDiv = document.getElementById('areas');
