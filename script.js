@@ -65,88 +65,68 @@ const restaurantData = {
 // ====== DEBUGGING ======
 console.log('RestaurantData loaded:', restaurantData);
 
-// ====== RENDER AREA CARDS ======
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM loaded');
-  renderAreas();
-});
+// ====== PHASE 1: Restaurant data ======
+const restaurantData = {
+  /* paste your full data here */
+};
 
+// ====== UTILITY ======
+function $(id) { return document.getElementById(id); }
+
+// ====== PHASE 1: Area selection ======
+window.addEventListener('DOMContentLoaded', () => renderAreas());
 function renderAreas() {
-  console.log('renderAreas called');
-  const areasDiv = document.getElementById('areas');
-  if (!areasDiv) { console.error('#areas not found'); return; }
-  areasDiv.innerHTML = '';
-
+  const div = $('areas'); div.innerHTML = '';
   Object.keys(restaurantData).forEach(area => {
-    console.log('Adding area:', area);
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="images/${area.toLowerCase()}.jpg" alt="${area}" />
-      <p>${area}</p>
-    `;
-    card.addEventListener('click', () => selectArea(area));
-    areasDiv.appendChild(card);
+    const card = document.createElement('div'); card.className = 'card';
+    card.innerHTML = `<img src="images/${area.toLowerCase()}.jpg" alt="${area}"/><p>${area}</p>`;
+    card.onclick = () => chooseHealth(area);
+    div.appendChild(card);
   });
 }
 
-// ====== PHASE 2: Health-level ======
-function selectArea(area) {
-  console.log('selectArea:', area);
-  document.getElementById('area-section').setAttribute('hidden','');
-  document.getElementById('category-section').removeAttribute('hidden');
-  renderHealthOptions(area);
-}
-
-function renderHealthOptions(area) {
-  console.log('renderHealthOptions:', area);
-  const optionsDiv = document.getElementById('health-options');
-  if (!optionsDiv) { console.error('#health-options not found'); return; }
-  optionsDiv.innerHTML = '';
-
-  ['Healthy','Less Healthy','All'].forEach(level => {
-    console.log('  option:', level);
-    const card = document.createElement('div');
-    card.className = 'card';
+// ====== PHASE 2: Health-level selection ======
+function chooseHealth(area) {
+  $('area-section').hidden = true;
+  $('category-section').hidden = false;
+  const opts = ['Healthy','Less Healthy','All'];
+  const div = $('health-options'); div.innerHTML = '';
+  opts.forEach(level => {
+    const card = document.createElement('div'); card.className='card';
     card.textContent = level;
-    card.addEventListener('click', () => selectHealth(level, area));
-    optionsDiv.appendChild(card);
+    card.onclick = () => startPicker(area, level);
+    div.appendChild(card);
   });
 }
 
-// ====== PHASE 3: Subcategory filters ======
-function selectHealth(level, area) {
-  console.log('selectHealth:', level, area);
-  document.getElementById('category-section').setAttribute('hidden','');
-  document.getElementById('subcategory-section').removeAttribute('hidden');
-  renderSubcategories(area, level);
+// ====== PHASE 4: Random Picker ======
+function startPicker(area, level) {
+  $('category-section').hidden = true;
+  $('picker-section').hidden = false;
+  // Decide which mechanic
+  const roll = Math.random() * 100;
+  let mech;
+  if (roll < 10) mech = 'wheel';
+  else if (roll < 50) mech = 'scratch';
+  else if (roll < 90) mech = 'cards';
+  else mech = 'list';
+  launchMechanic(mech, area, level);
 }
 
-function renderSubcategories(area, level) {
-  console.log('renderSubcategories:', area, level);
-  const subDiv = document.getElementById('subcategory-options');
-  if (!subDiv) { console.error('#subcategory-options not found'); return; }
-  subDiv.innerHTML = '';
-
-  let list = restaurantData[area] || [];
-  if (level !== 'All') {
-    list = list.filter(r => level === 'Healthy' ? r.avgCost <= 30000 : r.avgCost > 30000);
-  }
-
-  const cats = [...new Set(list.map(r => r.category))];
-  if (!cats.length) console.warn('No categories for', area, level);
-
-  cats.forEach(cat => {
-    console.log('  subcategory:', cat);
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-    card.addEventListener('click', () => selectSubcategory(cat, area, level));
-    subDiv.appendChild(card);
-  });
+function launchMechanic(type, area, level) {
+  $('picker-title').textContent = {
+    wheel: 'Spin the Wheel!',
+    scratch: 'Scratch & Win!',
+    cards: 'Pick a Card!',
+    list: 'All Options:'
+  }[type];
+  const container = $('picker-container'); container.innerHTML = '';
+  // TODO: implement each mechanic UI (wheel vs scratch vs cards vs list)
+  // Use restaurantData[area] filtered by level, plus bonus messages.
 }
 
-function selectSubcategory(category, area, level) {
-  console.log('selectSubcategory:', category, area, level);
-  // TODO: Phase 4
-}
+// ====== RESET ======
+$('reset-btn').onclick = () => {
+  $('picker-section').hidden = true;
+  $('area-section').hidden = false;
+};
