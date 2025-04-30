@@ -72,10 +72,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====== PHASE 1: Render Area Cards ======
- function renderAreas() {
-+  console.log('1️⃣ renderAreas()');
-   const container = $('areas');
+function renderAreas() {
+  console.log('1️⃣ renderAreas()');
+  const container = $('areas');
   container.innerHTML = '';
+
   Object.keys(restaurantData).forEach(area => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -89,12 +90,15 @@ window.addEventListener('DOMContentLoaded', () => {
 }
 
 // ====== PHASE 2: Choose Healthy/Less/All ======
- function chooseHealth(area) {
-+  console.log('2️⃣ chooseHealth()', area);
-   $('area-section').hidden     = true;
-   $('category-section').hidden = false;
+function chooseHealth(area) {
+  console.log('2️⃣ chooseHealth()', area);
+  // hide area grid, show health grid
+  $('area-section').hidden     = true;
+  $('category-section').hidden = false;
+
   const container = $('health-options');
   container.innerHTML = '';
+
   ['Healthy', 'Less Healthy', 'All'].forEach(level => {
     const card = document.createElement('div');
     card.className = 'card';
