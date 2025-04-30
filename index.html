@@ -27,11 +27,18 @@
     <!-- Phase 4: Random picker container -->
     <section id="picker-section" hidden>
       <h2 id="picker-title"></h2>
+      <canvas id="wheelcanvas" width="400" height="400" style="display:none; margin: auto;"></canvas>
       <div id="picker-container"></div>
       <button id="reset-btn">Start Over</button>
     </section>
   </main>
+<!-- Winwheel.js for the spinning wheel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Winwheel.js/2.7.0/Winwheel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"></script>
 
+<!-- jQuery + wScratchPad for real scratch cards -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/wScratchPad@2.1.1/dist/wScratchPad.min.js"></script>
   <script src="script.js" defer></script>
 </body>
 </html>
