@@ -65,7 +65,7 @@ const restaurantData = {
 // ====== DEBUGGING ======
 console.log('RestaurantData loaded:', restaurantData);
 
-/ ====== UTILITY ======
+// ====== UTILITY ======
 const $ = id => document.getElementById(id);
 
 // ====== PHASE 1: Restaurant Data ======
@@ -162,8 +162,7 @@ function showDetails(r) {
     `Time: ${r.open} - ${r.close}`
   ];
   if (r.url) info.push(`Link: ${r.url}`);
-  alert(info.join('
-'));
+  alert(info.join('\n'));
 }
 
 // ====== RESET BACK ======
