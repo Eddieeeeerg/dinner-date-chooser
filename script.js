@@ -141,11 +141,18 @@ function showDetails(r) {
     `Time: ${r.open} - ${r.close}`
   ];
   if (r.url) info.push(`Link: ${r.url}`);
+  // Use '
+' for newlines, not a literal line break:
   alert(info.join('
 '));
 }
 
 // ====== RESET ======
+function resetAll() {
+  $('picker-section').hidden   = true;
+  $('category-section').hidden = true;
+  $('area-section').hidden     = false;
+}
 function resetAll() {
   $('picker-section').hidden   = true;
   $('category-section').hidden = true;
