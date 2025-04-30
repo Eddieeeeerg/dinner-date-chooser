@@ -153,24 +153,27 @@ function shuffle(array) {
 
 // ====== SPINNING WHEEL ======
 function showWheel(area, level) {
+  // clear any old picker UI, show the <canvas>
   $('picker-container').innerHTML = '';
   const canvas = $('wheelcanvas');
   canvas.style.display = 'block';
 
-  const list     = getFilteredList(area, level);
-  -  const segments = list.map(r => ({ text: r.name }));
-+  // color each slice and darken its text
-+  const colors = ['#ffb3c1','#ffe5b4','#d0f4de','#bde0fe','#f0c6fa','#c9c9ff'];
-+  const segments = list.map((r,i) => ({
-+    text:          r.name,
-+    fillStyle:     colors[i % colors.length],
-+    textFillStyle: '#333'
-+  }));
+  // build our data & pastel color palette
+  const list   = getFilteredList(area, level);
+  const colors = ['#ffb3c1','#ffe5b4','#d0f4de','#bde0fe','#f0c6fa','#c9c9ff'];
+  const segments = list.map((r,i) => ({
+    text:          r.name,
+    fillStyle:     colors[i % colors.length],
+    textFillStyle: '#333'
+  }));
 
-  while (segments.length < 6) segments.push({ text: 'Bonus!' });
+  // if too few, pad with “Bonus!”
+  while (segments.length < 6) {
+    segments.push({ text: 'Bonus!', fillStyle: '#eee', textFillStyle: '#666' });
+  }
 
+  // stop any old wheel, then create a new one
   if (window.wheel) window.wheel.stopAnimation(false);
-
   window.wheel = new Winwheel({
     canvasId:     'wheelcanvas',
     outerRadius:  180,
@@ -184,12 +187,13 @@ function showWheel(area, level) {
         const idx   = w.getIndicatedSegmentNumber() - 1;
         const seg   = segments[idx];
         const found = list.find(r => r.name === seg.text);
-        if (found) showDetails(found);
-        else       alert('🎉 Bonus round – pick again!');
+        if (found)    showDetails(found);
+        else          alert('🎉 Bonus round – pick again!');
       }
     }
   });
 
+  // add a spin button
   const btn = document.createElement('button');
   btn.textContent = '🎡 Spin the Wheel';
   btn.className   = 'action-btn';
