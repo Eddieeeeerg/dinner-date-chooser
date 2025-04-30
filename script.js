@@ -70,7 +70,8 @@ window.addEventListener('DOMContentLoaded', () => {
   $('reset-btn').addEventListener('click', resetAll);
 });
 
-function renderAreas()() {
+// ====== PHASE 1: Render Area Cards ======
+function renderAreas() {
   const container = $('areas');
   container.innerHTML = '';
 
@@ -93,7 +94,7 @@ function chooseHealth(area) {
 
   const container = $('health-options');
   container.innerHTML = '';
-  ['Healthy','Less Healthy','All'].forEach(level => {
+  ['Healthy', 'Less Healthy', 'All'].forEach(level => {
     const card = document.createElement('div');
     card.className = 'card';
     card.textContent = level;
@@ -102,7 +103,7 @@ function chooseHealth(area) {
   });
 }
 
-// ====== PHASE 4: Random Picker (List Only) ======
+// ====== PHASE 4: List Picker ======
 function startPicker(area, level) {
   $('category-section').hidden = true;
   $('picker-section').hidden   = false;
@@ -115,11 +116,8 @@ function showList(area, level) {
   container.innerHTML = '';
 
   let list = (restaurantData[area] || []).slice();
-  if (level === 'Healthy') {
-    list = list.filter(r => r.avgCost <= 30000);
-  } else if (level === 'Less Healthy') {
-    list = list.filter(r => r.avgCost > 30000);
-  }
+  if (level === 'Healthy') list = list.filter(r => r.avgCost <= 30000);
+  else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
 
   list.forEach(r => {
     const card = document.createElement('div');
@@ -141,18 +139,11 @@ function showDetails(r) {
     `Time: ${r.open} - ${r.close}`
   ];
   if (r.url) info.push(`Link: ${r.url}`);
-  // Use '
-' for newlines, not a literal line break:
   alert(info.join('
 '));
 }
 
 // ====== RESET ======
-function resetAll() {
-  $('picker-section').hidden   = true;
-  $('category-section').hidden = true;
-  $('area-section').hidden     = false;
-}
 function resetAll() {
   $('picker-section').hidden   = true;
   $('category-section').hidden = true;
