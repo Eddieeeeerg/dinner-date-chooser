@@ -288,4 +288,12 @@ h2 {
   100% { transform: translateY(-100vh) scale(1.4); opacity: 0; }
 }
 
+/* ==== BUDGET SLIDER ==== */
+#budget-container{margin:1.2rem auto 2rem;text-align:center}
+#budget-slider{width:80%;max-width:420px;appearance:none;height:6px;border-radius:3px;background:#ff9ec4;outline:none}
+#budget-slider::-webkit-slider-thumb{appearance:none;width:24px;height:24px;border-radius:50%;background:#ff4d9b;cursor:pointer}
+#budget-display{font-weight:700;margin-left:.25rem}
+.budget-msg{margin:.4rem auto 0;font-size:.9rem;color:#c41f66}
+
+
 
