@@ -86,22 +86,22 @@ function initBudgetSlider(){
     49:"😭😭😭😭",50:"Split?",51:"So you hate me, huh?",52:"This is madness.",
     53:"Not funny anymore. Stop, please.",54:"Why? Just... why?",55:"Ellie, what are you doing?",
     56:"You’ve definitely gone crazy.",57:"Ellie, I love you, please stop.",
-    58:"Dang, you really don’t care anymore.",59:"Okay, I give up. Have it your way.",
-    60:"Bruh.",61:"You are evil.",62:"Hallo?",63:"Get out of my yard!",
-    64:"Eddie is cute, huh? 🤭",65:"I hate you.",66:"Okay... are you that hungry?",
-    67:"Please don’t make me swear.",68:"I hope you have a hard time putting on makeup tomorrow.",
+    58:"Dang, you really don’t care anymore.",59:"big spender energy, huh?",
+    60:"Oh cool, Ellie just casually bankrupting me again.",61:"You are evil.",62:"Hallo?",63:"Get out of my yard!",
+    64:"Ellie, this better come with free dessert or great compliments.",65:"I hate you.",66:"Okay... are you that hungry?",
+    67:"At this point, I'm just a walking bank app, aren't I?",68:"Lets pray your eyeliner survives this guilt.",
     69:"Hehehehe.",70:"Please stop. I love you, Ellie.",71:"Monster.",72:"🖕🏻",
     73:"🖕🏻🖕🏻🖕🏻 (Triple middle finger)",74:"Is this love?",
-    75:"I hope the food tastes like shit.",
+    75:"For this price, the food better come with emotional healing.",
     76:"There must be no options available at this price. What are you even doing?",
-    77:"…",78:"……..",79:"Ellieeeeeeeeeeee",80:"Stoooooop.",
+    77:"Totally a normal price, Ellie. Totally not panicking.",78:"Nothing to see here. Just my savings dissolving.",79:"Ellieeeeeeeeeeee",80:"Stoooooop.",
     81:"Pleaseeeeee.",82:"!!!!!!!!!!",83:"83k? 83k? Really?",84:"Psychopath.",
     85:"I hope Lili behaves horribly in class tomorrow.",86:"Don’t you feel bad?",
     87:"Do you think I’m rich?",88:"Do you despise me this much?",89:"Are you doing this for fun?",
     90:"Would you stop if I gave you a parrot kiss?",91:"You’re a horrible person right now.",
     92:"Nah, you’re not. I love you so much, Ellie.",93:"I’m offended.",
     94:"So...",95:".....",96:"...I...",97:"...hate...",98:"...YOU...",99:"....😢....",
-    100:"⚠️ Error: April 26. Ellie is crazy!",101:"I won’t let you go further."
+    100:"⚠️ Error: Ellie is crazy!",101:"I won’t let you go further."
   };
 
   function updateUI(){
