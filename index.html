@@ -15,6 +15,16 @@
     <!-- Phase 1: Area selection -->
     <section id="area-section">
       <h2>Where do you want to eat?</h2>
+      <!-- 💸 BUDGET SLIDER (only shows on this first page) -->
+<div id="budget-container">
+  <label for="budget-slider">
+    💸 Budget:
+    <span id="budget-display">35 000₩</span>
+  </label><br>
+  <input type="range" id="budget-slider"
+         min="10" max="101" step="1" value="35">
+  <p id="budget-message" class="budget-msg">Medium-range price</p>
+</div>
       <div id="areas" class="grid"></div>
     </section>
 
