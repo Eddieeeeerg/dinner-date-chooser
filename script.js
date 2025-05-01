@@ -71,6 +71,30 @@ window.addEventListener('DOMContentLoaded', () => {
   $('reset-btn').addEventListener('click', resetAll);
 });
 
+// ==== ONE-TIME HEART BUBBLES ON PAGE LOAD ====
+function launchHeartBubbles() {
+  const hearts = ["💖", "💘", "💝", "❤️‍🔥"];
+  const total   = 25;            // how many hearts
+  const delayMs = 120;           // gap between hearts
+
+  for (let i = 0; i < total; i++) {
+    setTimeout(() => {
+      const h = document.createElement("span");
+      h.className  = "heart-bubble";
+      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      // random horizontal start
+      h.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(h);
+      // clean up after animation
+      setTimeout(() => h.remove(), 4000);
+    }, i * delayMs);
+  }
+}
+
+// fire once when everything is ready
+window.addEventListener("load", launchHeartBubbles);
+
+
 // ====== PHASE 1: Render Area Cards ======
 function renderAreas() {
   console.log('1️⃣ renderAreas()');
