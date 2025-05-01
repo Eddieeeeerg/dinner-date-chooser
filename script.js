@@ -160,8 +160,31 @@ function renderAreas() {
     `;
     card.onclick = () => chooseHealth(area);
     container.appendChild(card);
+  card.dataset.area = area;     // 💡 so we can hide/show later
+
   });
+/* ─── “? Random” card ─────────────────────────── */
+const rand = document.createElement('div');
+rand.className = 'card';
+rand.innerHTML = `<p style="font-size:3rem">❓</p><p>Random</p>`;
+rand.dataset.area = 'RANDOM';
+rand.onclick = () => {
+  const keys = Object.keys(restaurantData);
+  const randomArea = keys[Math.floor(Math.random()*keys.length)];
+  chooseHealth(randomArea);
+};
+container.appendChild(rand);
+
+/* ─── “🌀 Any” card (merge all areas) ─────────── */
+const any = document.createElement('div');
+any.className = 'card';
+any.innerHTML = `<p style="font-size:2.5rem">🌀</p><p>Any</p>`;
+any.dataset.area = 'ANY';
+any.onclick  = () => chooseHealth('ANY');
+container.appendChild(any);
+  
 }
+
 
 // ====== PHASE 2: Choose Healthy/Less/All ======
 function chooseHealth(area) {
@@ -242,8 +265,13 @@ function showWheel(area, level) {
   canvas.style.display = 'block';
 
   // build wheel segments
-  const list   = getFilteredList(area, level);
-  const colors = ['#ffb3c1','#ffe5b4','#d0f4de','#bde0fe','#f0c6fa','#c9c9ff'];
+ let list = area === 'ANY'
+  ? Object.values(restaurantData).flat()
+  : (restaurantData[area] || []).slice();
+list = list.filter(r => r.avgCost <= budgetLimit);          // ← NEW
+if (level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
+else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
+
   const segments = list.map((r,i) => ({
     text:          r.name,
     fillStyle:     colors[i % colors.length],
