@@ -2,6 +2,8 @@
 console.log('🔥 script.js loaded');
 // ====== UTILITY ======
 const $ = id => document.getElementById(id);
+let budgetLimit = 101000;   // start = no limit (101 k)
+
 
 // ====== PHASE 1: Restaurant Data ======
 const restaurantData = {
@@ -68,8 +70,56 @@ const restaurantData = {
 // ====== INITIALIZATION ======
 window.addEventListener('DOMContentLoaded', () => {
   renderAreas();
+initBudgetSlider(); 
   $('reset-btn').addEventListener('click', resetAll);
 });
+/***** BUDGET SLIDER *****/
+function initBudgetSlider(){
+  const slider  = $('budget-slider');
+  const disp    = $('budget-display');
+  const msgBox  = $('budget-message');
+
+  const exact = {
+    41:"What are you doing?",42:"Ok Ellie, stop.",43:"😒😒",44:"This isn’t really cheap, you know.",
+    45:"Wow. Just wow.",46:"Okay, so you don’t care about my budget, huh?",
+    47:"I’m trying so hard to be okay with this...",48:"Okay, keep going. I don’t care anymore.",
+    49:"😭😭😭😭",50:"Split?",51:"So you hate me, huh?",52:"This is madness.",
+    53:"Not funny anymore. Stop, please.",54:"Why? Just... why?",55:"Ellie, what are you doing?",
+    56:"You’ve definitely gone crazy.",57:"Ellie, I love you, please stop.",
+    58:"Dang, you really don’t care anymore.",59:"Okay, I give up. Have it your way.",
+    60:"Bruh.",61:"You are evil.",62:"Hallo?",63:"Get out of my yard!",
+    64:"Eddie is cute, huh? 🤭",65:"I hate you.",66:"Okay... are you that hungry?",
+    67:"Please don’t make me swear.",68:"I hope you have a hard time putting on makeup tomorrow.",
+    69:"Hehehehe.",70:"Please stop. I love you, Ellie.",71:"Monster.",72:"🖕🏻",
+    73:"🖕🏻🖕🏻🖕🏻 (Triple middle finger)",74:"Is this love?",
+    75:"I hope the food tastes like shit.",
+    76:"There must be no options available at this price. What are you even doing?",
+    77:"…",78:"……..",79:"Ellieeeeeeeeeeee",80:"Stoooooop.",
+    81:"Pleaseeeeee.",82:"!!!!!!!!!!",83:"83k? 83k? Really?",84:"Psychopath.",
+    85:"I hope Lili behaves horribly in class tomorrow.",86:"Don’t you feel bad?",
+    87:"Do you think I’m rich?",88:"Do you despise me this much?",89:"Are you doing this for fun?",
+    90:"Would you stop if I gave you a parrot kiss?",91:"You’re a horrible person right now.",
+    92:"Nah, you’re not. I love you so much, Ellie.",93:"I’m offended.",
+    94:"So...",95:".....",96:"...I...",97:"...hate...",98:"...YOU...",99:"....😢....",
+    100:"⚠️ Error: April 26. Ellie is crazy!",101:"I won’t let you go further."
+  };
+
+  function updateUI(){
+    const v = +slider.value;              // 10 – 101
+    budgetLimit = v * 1000;              // store as ₩
+    disp.textContent = (v*1000).toLocaleString() + "₩";
+
+    let txt = "";
+    if (v <= 25)       txt = "Low-range price";
+    else if (v <= 35)  txt = "Medium-range price";
+    else if (v <= 40)  txt = "Almost expensive 😅";
+    else               txt = exact[v] || "";
+    msgBox.textContent = txt;
+  }
+
+  slider.addEventListener('input', updateUI);
+  updateUI(); // initial text
+}
 
 // ==== ONE-TIME HEART BUBBLES ON PAGE LOAD ====
 function launchHeartBubbles() {
@@ -366,6 +416,7 @@ function showDetails(r) {
 // ====== HELPER: getFilteredList ======
 function getFilteredList(area, level) {
   let list = (restaurantData[area] || []).slice();
+ list = list.filter(r => r.avgCost <= budgetLimit); 
   if      (level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
   else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
   return list;
