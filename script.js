@@ -372,9 +372,15 @@ function startWheel(list, spinsLeft){
   title.textContent = `Spins left: ${spinsLeft}`;
 
   /* ── pad to exactly 6 slices ── */
-  const fillers = ['✨ Bonus ✨','💖 Free Kiss','🤗 Free Hug','🍀 Lucky'];
-  while(list.length < 6)
-    list.push({ name: fillers[list.length % fillers.length], bonus:true });
+const fillers = [
+  { name:'✨ Bonus ✨', type:'bonus'  },
+  { name:'💖 Free Kiss', type:'kiss' },
+  { name:'🤗 Free Hug',  type:'hug'  },
+  { name:'🍀 Lucky',     type:'lucky'}
+];
+while(list.length < 6) 
+  list.push(fillers[list.length % fillers.length]);
+
 
   /* ── colour palette & segments ── */
   const colors = shuffle(['#b7e4c7','#ffd6ff','#caffbf',
@@ -403,13 +409,29 @@ function startWheel(list, spinsLeft){
       duration:5,
       spins:Math.floor(Math.random()*3)+5,
       callbackFinished:(seg)=>{
-        $('wheel-wrap').classList.remove('spinning');
-        const pick=list.find(r=>r.name.startsWith(seg.text.replace('…','')));
-        if(pick && !pick.bonus){
-          resultDiv.innerHTML='';
-          resultDiv.appendChild(makeResultCard(pick));
-          spinsLeft--;                 // real pick uses up a spin
-        }
+  $('wheel-wrap').classList.remove('spinning');
+
+  const pick = list.find(r => r.name.startsWith(seg.text.replace('…','')));
+
+  /* ========= WIN LOGIC ========= */
+  if(!pick.type){                    // a real restaurant
+    resultDiv.innerHTML = '';
+    resultDiv.appendChild(makeResultCard(pick));
+    spinsLeft--;                     // always costs a spin
+  } else {                           // one of the fun slices
+    if(pick.type === 'bonus'){       // always +1
+      spinsLeft++;
+      flashPlusOne();
+    } else {                         // kiss / hug / lucky
+      if(spinsLeft > 1) spinsLeft--; // costs a spin unless last
+      if(pick.type === 'lucky') flashLucky();
+    }
+  }
+
+  title.textContent = `Spins left: ${spinsLeft}`;
+  spinBtn.disabled  = spinsLeft === 0;
+}
+
         // BONUS slice: if it’s a bonus and you’re on your last spin, grant +1
         if (pick && pick.bonus && spinsLeft === 1) {
           spinsLeft++;
@@ -431,18 +453,34 @@ function startWheel(list, spinsLeft){
   spinBtn.textContent='🌀 Spin!';
   box.appendChild(spinBtn);
 
+  spinBtn.onclick = () => {
+  if(spinsLeft === 0) return;
+  playSpinSound();
+    function flashPlusOne(){
+  const plus = document.createElement('span');
+  plus.textContent = '+1';
+  plus.className = 'plus-one';
+  $('wheel-wrap').appendChild(plus);
+  setTimeout(()=>plus.remove(), 1400);
+}
 
+function flashLucky(){
+  const msg = document.createElement('div');
+  msg.id = 'lucky-msg';
+  msg.textContent = 'You\'re going to have a lucky day, Ellie ✨';
+  $('wheel-wrap').appendChild(msg);
+  setTimeout(()=>msg.remove(), 1600);
+}
 
-  /* reset & spin */
-  spinBtn.onclick=()=>{
-    if(spinsLeft===0) return;
-    playSpinSound();
-    $('wheel-wrap').classList.add('spinning');
-    window.wheel.stopAnimation(false);
-    window.wheel.rotationAngle=0;      // full power every time
-    window.wheel.draw();
-    window.wheel.startAnimation();
-  };
+  $('wheel-wrap').classList.add('spinning');
+
+  window.wheel.stopAnimation(false);
+  window.wheel.rotationAngle = 0;
+  window.wheel.animation.stopAngle = Math.random() * 360;  // ★ random finish
+  window.wheel.draw();
+  window.wheel.startAnimation();
+};
+
 }
 
 
