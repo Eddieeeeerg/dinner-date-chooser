@@ -160,15 +160,7 @@ function pickerEmpty(){
   $('picker-content').innerHTML = '';
 }
 
-/* ─── placeholders until we build Wheel / Cards ─────────────────────── */
-function showWheel(){
-  $('picker-title').textContent = '(Wheel coming soon!)';
-  $('picker-content').innerHTML = '';
-}
-function showCards(){
-  $('picker-title').textContent = '(Cards coming soon!)';
-  $('picker-content').innerHTML = '';
-}
+
 
 /* ─── METHOD‑CHOOSER wiring ─────────────────────────────────────────── */
 function initMethodChooser(){
@@ -192,29 +184,7 @@ $('back-btn').onclick = () => {
   $('picker-section').hidden = true;
   $('method-section').hidden = false;
 };
-/*****  RESULT‑CARD HELPER  ***************************************************/
-function makeResultCard(r){
-  const div = document.createElement('div');
-  div.className = 'result-card';
-  div.innerHTML = `
-    <img src="${r.img}" alt="${r.name}">
-    <h3>${r.name}</h3>
-    <p>Price: ₩${r.avgCost.toLocaleString()}</p>
-    <p>Time: ${r.open || '—'} – ${r.close || '—'}</p>
-    <p><a href="${r.url}" target="_blank">View on Naver</a></p>
-  `;
-  return div;
-}
 
-/*****  RANDOM & LIST PICKERS  ************************************************/
-function showRandom(area, level){ … }   // (same body you already wrote)
-function showList(area, level){ … }     // (same body)
-/*****  PLACEHOLDERS UNTIL WE BUILD WHEEL / CARDS  ****************************/
-function showWheel(){ $('picker-title').textContent='(Wheel coming soon!)'; $('picker-content').innerHTML=''; }
-function showCards(){ $('picker-title').textContent='(Cards coming soon!)'; $('picker-content').innerHTML=''; }
-
-/*****  METHOD‑CHOOSER CLICK WIRING  ******************************************/
-function initMethodChooser(){ … }       // (same body)
 
 
 // ==== ONE-TIME HEART BUBBLES ON PAGE LOAD ====
