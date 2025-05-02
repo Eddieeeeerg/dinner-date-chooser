@@ -358,69 +358,75 @@ function showWheel(area, level){
 function startWheel(list, spinsLeft){
   const title = $('picker-title');
   const box   = $('picker-container');
-  box.innerHTML = '';                        // clear dice
-  $('wheelcanvas').style.display = 'block';  // show canvas
+  box.innerHTML = '';
+  $('wheelcanvas').style.display='block';
   title.textContent = `Spins left: ${spinsLeft}`;
 
-  // pad to 6 slices with fun fillers
+  /* ── pad to exactly 6 slices ── */
   const fillers = ['✨ Bonus ✨','💖 Free Kiss','🤗 Free Hug','🍀 Lucky'];
   while(list.length < 6)
-    list.push({name: fillers[list.length % fillers.length], bonus: true});
+    list.push({ name: fillers[list.length % fillers.length], bonus:true });
 
-  // slice colours
-  const colors = shuffle([
-    '#b7e4c7','#ffd6ff','#caffbf','#fdffb6','#a0c4ff','#ffadad'
-  ]);
-
-  // Winwheel is 1-based → prepend a dummy entry
-  const segments = [{}];
-  list.forEach((r,i) => segments.push({
-    text: (r.name.length > 18 ? r.name.slice(0,16) + '…' : r.name),
-    fillStyle: colors[i % colors.length],
-    textOrientation: 'horizontal',
-    textAlignment: 'outer',
-    textFillStyle: '#333'
+  /* ── colour palette & segments ── */
+  const colors = shuffle(['#b7e4c7','#ffd6ff','#caffbf',
+                          '#fdffb6','#a0c4ff','#ffadad']);
+  const segments=[{}];                 // 1‑based for Winwheel
+  list.forEach((r,i)=>segments.push({
+    text:(r.name.length>14? r.name.slice(0,12)+'…':r.name),
+    fillStyle:colors[i%colors.length],
+    textOrientation:'horizontal',
+    textAlignment:'outer',
+    textFontSize:12,
+    textFillStyle:'#333'
   }));
 
-  // destroy old wheel if exists
+  /* ── destroy old wheel if any ── */
   if(window.wheel) window.wheel.stopAnimation(false);
 
-  // ─── instantiate the wheel ────────────────────────────────────────────
   window.wheel = new Winwheel({
-    canvasId:    'wheelcanvas',
-    outerRadius: 180,
-    lineWidth:   2,
-    numSegments: list.length,
+    canvasId:'wheelcanvas',
+    outerRadius:180,
+    lineWidth:2,
+    numSegments:segments.length-1,
     segments,
-    animation: {
-      type:       'spinToStop',
-      duration:   5,
-      spins:      Math.floor(Math.random()*3) + 5,
-      callbackFinished: (seg) => {
-        const pick = list.find(r => r.name.startsWith(seg.text.replace('…','')));
+    animation:{
+      type:'spinToStop',
+      duration:5,
+      spins:Math.floor(Math.random()*3)+5,
+      callbackFinished:(seg)=>{
+        const pick=list.find(r=>r.name.startsWith(seg.text.replace('…','')));
         if(pick && !pick.bonus){
-          resultDiv.innerHTML = '';
+          resultDiv.innerHTML='';
           resultDiv.appendChild(makeResultCard(pick));
+          spinsLeft--;                 // real pick uses up a spin
         }
-        spinsLeft--;
-        title.textContent = `Spins left: ${spinsLeft}`;
-        if(!spinsLeft) spinBtn.disabled = true;
+        title.textContent=`Spins left: ${spinsLeft}`;
+        spinBtn.disabled = spinsLeft===0;
       }
     }
   });
 
-  // ---------- 3. Spin button ----------
-  const spinBtn = document.createElement('button');
-  spinBtn.className = 'spin-btn';
-  spinBtn.textContent = '🌀 Spin!';
+  /* ── Spin button ── */
+  const spinBtn=document.createElement('button');
+  spinBtn.className='spin-btn';
+  spinBtn.textContent='🌀 Spin!';
   box.appendChild(spinBtn);
-  spinBtn.onclick = () => window.wheel.startAnimation();
 
-  // ─── insert the result container here ─────────────────────────────────
-  const resultDiv = document.createElement('div');
-  resultDiv.id = 'wheel-result';
+  /* ── winner card container ── */
+  const resultDiv=document.createElement('div');
+  resultDiv.id='wheel-result';
   box.appendChild(resultDiv);
+
+  /* reset & spin */
+  spinBtn.onclick=()=>{
+    if(spinsLeft===0) return;
+    window.wheel.stopAnimation(false);
+    window.wheel.rotationAngle=0;      // full power every time
+    window.wheel.draw();
+    window.wheel.startAnimation();
+  };
 }
+
 
 
 
