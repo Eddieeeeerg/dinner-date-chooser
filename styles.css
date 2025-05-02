@@ -321,3 +321,18 @@ h2 {
 }
 .dice-btn:hover,.spin-btn:enabled:hover{transform:scale(1.07);}
 .spin-btn:disabled{opacity:.4;cursor:default}
+
+/* ==== WHEEL ==== */
+#wheel-wrap{position:relative;width:380px;margin:0 auto}
+#wheel-pointer{
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  font-size:2rem;color:#ff4d9b;user-select:none;pointer-events:none;
+}
+.dice-btn,.spin-btn{
+  display:block;margin:0.9rem auto;padding:0.6rem 1.4rem;font-size:1.1rem;
+  border:3px solid #ff4d9b;border-radius:14px;background:#fff;cursor:pointer;
+  transition:transform .15s;
+}
+.dice-btn:hover,.spin-btn:enabled:hover{transform:scale(1.08);}
+.spin-btn:disabled{opacity:.4;cursor:default}
+
