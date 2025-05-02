@@ -37,7 +37,10 @@
     <section id="picker-section" hidden>
   <h2 id="picker-title"></h2>
   <!-- spinning wheel canvas -->
-  <canvas id="wheelcanvas" width="360" height="360" style="display: none; margin: 0 auto;"></canvas>
+    <div id="wheel-wrap" hidden>
+    <div id="wheel-pointer">▼</div>
+    <canvas id="wheelcanvas" width="380" height="380"></canvas>
+  </div>
   <div id="picker-container"></div>
   <button id="reset-btn">Start Over</button>
 </section>
