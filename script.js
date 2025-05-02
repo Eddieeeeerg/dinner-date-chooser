@@ -109,6 +109,46 @@ function initBudgetSlider(){
   };
  
   /*****  METHOD-CHOOSER  *****/
+  function makeResultCard(r){
+  const div = document.createElement('div');
+  div.className = 'result-card';
+  div.innerHTML = `
+    <img src="${r.img}" alt="${r.name}">
+    <h3>${r.name}</h3>
+    <p>Price: ₩${r.avgCost.toLocaleString()}</p>
+    <p>Time: ${r.open || '—'} – ${r.close || '—'}</p>
+    <p><a href="${r.url}" target="_blank">View on Naver</a></p>
+  `;
+  return div;
+}
+function showRandom(area, level){
+  const list = getFilteredList(area, level);
+  if(!list.length){ pickerEmpty(); return; }
+
+  const r = list[Math.floor(Math.random()*list.length)];
+  $('picker-title').textContent = 'Winner 🎉';
+  const out = $('picker-content');
+  out.innerHTML = '';            // clear
+  out.appendChild(makeResultCard(r));
+}
+
+function showList(area, level){
+  const list = getFilteredList(area, level);
+  if(!list.length){ pickerEmpty(); return; }
+
+  $('picker-title').textContent = 'All Options:';
+  const out = $('picker-content');
+  out.innerHTML = '';
+  list.forEach(r => out.appendChild(makeResultCard(r)));
+}
+
+function pickerEmpty(){
+  $('picker-title').textContent = 'No restaurants match that budget 😢';
+  $('picker-content').innerHTML = '';
+}
+function showWheel(){ $('picker-title').textContent='(Wheel coming soon!)'; $('picker-content').innerHTML=''; }
+function showCards(){ $('picker-title').textContent='(Cards coming soon!)'; $('picker-content').innerHTML=''; }
+
 function initMethodChooser(){
   $('method-buttons').addEventListener('click', e=>{
     const btn = e.target.closest('button');
@@ -515,3 +555,9 @@ function resetAll() {
 $('method-section').hidden = true;
 
 }
+
+$('back-btn').onclick = () => {
+  $('picker-section').hidden = true;
+  $('method-section').hidden  = false;
+};
+
