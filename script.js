@@ -71,7 +71,8 @@ const restaurantData = {
 window.addEventListener('DOMContentLoaded', () => {
   renderAreas();
 initBudgetSlider(); 
-refreshAreaAvailability(); 
+refreshAreaAvailability();
+initMethodChooser();
   $('reset-btn').addEventListener('click', resetAll);
 });
 /***** BUDGET SLIDER *****/
@@ -104,6 +105,20 @@ function initBudgetSlider(){
     94:"So...",95:".....",96:"...I...",97:"...hate...",98:"...YOU...",99:"....😢....",
     100:"⚠️ Error: Ellie is crazy!",101:"I won’t let you go further."
   };
+ 
+  /*****  METHOD-CHOOSER  *****/
+function initMethodChooser(){
+  $('method-buttons').addEventListener('click', e=>{
+    if(!e.target.closest('button')) return;
+    const m = e.target.closest('button').dataset.method;
+    $('method-section').hidden = true;          // hide chooser
+    if(m === 'wheel')       showWheel(currentArea, currentLevel);
+    else if(m === 'random') showRandom(currentArea, currentLevel);
+    else if(m === 'cards')  showCards(currentArea, currentLevel);
+    else if(m === 'list')   showList(currentArea, currentLevel);
+  });
+}
+
 function refreshAreaAvailability(){
   document.querySelectorAll('#areas .card').forEach(card=>{
     const area = card.dataset.area;
@@ -217,6 +232,8 @@ function chooseHealth(area) {
     container.appendChild(card);
   });
 }
+// Phase-3: display method chooser
+$('method-section').hidden = false;
 
 // ====== PHASE 4: Pick a Mechanic ======
 function startPicker(area, level) {
@@ -488,4 +505,6 @@ function resetAll() {
   $('picker-section').hidden   = true;
   $('category-section').hidden = true;
   $('area-section').hidden     = false;
+$('method-section').hidden = true;
+
 }
