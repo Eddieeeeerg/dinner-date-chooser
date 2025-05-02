@@ -3,6 +3,8 @@ console.log('🔥 script.js loaded');
 // ====== UTILITY ======
 const $ = id => document.getElementById(id);
 let budgetLimit = 101000;   // start = no limit (101 k)
+let currentArea  = null;   // ← track the user’s picks
+let currentLevel = null;
 
 
 // ====== PHASE 1: Restaurant Data ======
@@ -109,15 +111,20 @@ function initBudgetSlider(){
   /*****  METHOD-CHOOSER  *****/
 function initMethodChooser(){
   $('method-buttons').addEventListener('click', e=>{
-    if(!e.target.closest('button')) return;
-    const m = e.target.closest('button').dataset.method;
-    $('method-section').hidden = true;          // hide chooser
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const m = btn.dataset.method;
+
+    $('method-section').hidden = true;   // hide chooser
+    $('picker-section').hidden = false;  // show mechanic area
+
     if(m === 'wheel')       showWheel(currentArea, currentLevel);
     else if(m === 'random') showRandom(currentArea, currentLevel);
     else if(m === 'cards')  showCards(currentArea, currentLevel);
     else if(m === 'list')   showList(currentArea, currentLevel);
   });
 }
+
 
 function refreshAreaAvailability(){
   document.querySelectorAll('#areas .card').forEach(card=>{
@@ -232,8 +239,16 @@ function chooseHealth(area) {
     container.appendChild(card);
   });
 }
-// Phase-3: display method chooser
-$('method-section').hidden = false;
+// ====== PHASE 3: show the Method Chooser ======
+function startPicker(area, level) {
+  currentArea  = area;
+  currentLevel = level;
+
+  $('category-section').hidden = true;   // hide Healthy/Less/All
+  $('method-section').hidden   = false;  // show Wheel / Random / Cards / All
+}
+
+
 
 // ====== PHASE 4: Pick a Mechanic ======
 function startPicker(area, level) {
