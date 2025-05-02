@@ -407,15 +407,17 @@ if(!spinsLeft) spinBtn.disabled=true;
         }
 
   // ---------- 3. Spin button ----------
-  const spinBtn=document.createElement('button');
-  spinBtn.className='spin-btn';
-  spinBtn.textContent='🌀 Spin!';
-  box.appendChild(spinBtn);
-  spinBtn.onclick=()=>window.wheel.startAnimation();
+const spinBtn = document.createElement('button');
+spinBtn.className = 'spin-btn';
+spinBtn.textContent = '🌀 Spin!';
+box.appendChild(spinBtn);
+spinBtn.onclick = () => window.wheel.startAnimation();
+
+// ─── insert the result container here ─────────────────────────────────
+const resultDiv = document.createElement('div');
+resultDiv.id = 'wheel-result';
+box.appendChild(resultDiv);
 }
-  const resultDiv = document.createElement('div');
-  resultDiv.id = 'wheel-result';
-  box.appendChild(resultDiv);
 
 
 
