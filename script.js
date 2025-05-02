@@ -325,61 +325,88 @@ function shuffle(array) {
 }
 
 
-// ====== SPINNING WHEEL ======
-function showWheel(area, level) {
-  // clear old UI, show the canvas
-  $('picker-container').innerHTML = '';
-  const canvas = $('wheelcanvas');
-  canvas.style.display = 'block';
+// ====== SPINNING WHEEL (with dice picks 1‑6 spins) =========================
+function showWheel(area, level){
+  const title = $('picker-title');
+  const box   = $('picker-content');
+  box.innerHTML = '';                        // clear
+  $('wheelcanvas').style.display = 'block';  // show canvas
 
-  // build wheel segments
- let list = area === 'ANY'
-  ? Object.values(restaurantData).flat()
-  : (restaurantData[area] || []).slice();
-list = list.filter(r => r.avgCost <= budgetLimit);          // ← NEW
-if (level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
-else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
+  // ---------- 1. build filtered list ----------
+  let list = area === 'ANY'
+               ? Object.values(restaurantData).flat()
+               : (restaurantData[area] || []).slice();
+  list = list.filter(r => r.avgCost <= budgetLimit);
+  if      (level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
+  else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
+  if(!list.length){ pickerEmpty(); return; }
 
-  const segments = list.map((r,i) => ({
-    text:          r.name,
-    fillStyle:     colors[i % colors.length],
-    textFillStyle: '#333'
+  // pad to ≥6 so wheel looks good
+  while (list.length < 6) list.push({ name:'✨ Bonus ✨', bonus:true });
+
+  // ---------- 2. dice to decide spins ----------
+  title.textContent = 'Tap the Die to get your spins!';
+  const dice = document.createElement('button');
+  dice.textContent = '🎲';
+  dice.className   = 'dice-btn';
+  box.appendChild(dice);
+
+  dice.onclick = ()=> {
+    const spinsLeft = Math.floor(Math.random()*6)+1;   // 1‑6
+    startWheel(list, spinsLeft);
+  };
+}
+
+/* helper that actually draws + spins the wheel */
+function startWheel(list, spinsLeft){
+  const title = $('picker-title');
+  const box   = $('picker-content');
+  box.innerHTML = '';                // clear dice
+  title.textContent = `Spins left: ${spinsLeft}`;
+
+  // random pastel slice colours
+  const colors = shuffle([
+    '#ffd1dc','#ffdde1','#ffe5b4','#cffafe','#e9d5ff',
+    '#d1fae5','#fcd34d','#f9a8d4','#a7f3d0','#fca5a5'
+  ]);
+
+  // build segments array for Winwheel
+  const segs = list.map((r,i)=>({
+    text: r.name,
+    fillStyle: colors[i % colors.length],
+    textFillStyle:'#333'
   }));
-  // pad to at least 6 slices
-  while (segments.length < 6) {
-    segments.push({ text: 'Bonus!', fillStyle: '#eee', textFillStyle: '#666' });
-  }
 
-  // stop any previous wheel
-  if (window.wheel) window.wheel.stopAnimation(false);
-
-  // instantiate a new Winwheel
-  window.wheel = new Winwheel({
-    canvasId:     'wheelcanvas',
-    outerRadius:  180,
-    textFontSize: 14,
-    segments,
-    animation: {
-      type:       'spinToStop',
-      duration:    5,
-      spins:       8,
-      callbackFinished: (w) => {
-        const idx   = w.getIndicatedSegmentNumber() - 1;
-        const seg   = segments[idx];
-        const found = list.find(r => r.name === seg.text);
-        if (found)    showDetails(found);
-        else          alert('🎉 Bonus round – pick again!');
+  // create wheel (destroy previous if any)
+  if(window.wheel) window.wheel.stopAnimation(false);
+  const wheel = window.wheel = new Winwheel({
+    canvasId:'wheelcanvas',
+    outerRadius:180,
+    textFontSize:14,
+    segments: segs,
+    animation:{
+      type:'spinToStop',
+      duration:6,
+      spins:Math.floor(Math.random()*3)+5, // 5‑7 revs
+      callbackFinished:(seg)=> {
+        const pick = list.find(r=>r.name===seg.text);
+        if(pick && !pick.bonus) showDetails(pick);
+        else alert('🎉 Bonus! Spin again');
+        spinsLeft--;
+        title.textContent = `Spins left: ${spinsLeft}`;
+        if(spinsLeft===0) spinBtn.disabled = true;
       }
     }
   });
 
-  // add a Spin button
-  const btn = document.createElement('button');
-  btn.textContent = '🎡 Spin the Wheel';
-  btn.className   = 'action-btn';
-  $('picker-container').appendChild(btn);
-  btn.onclick = () => window.wheel.startAnimation();
+  // add Spin button
+  const spinBtn = document.createElement('button');
+  spinBtn.textContent = '🎡 Spin!';
+  spinBtn.className   = 'spin-btn';
+  box.appendChild(spinBtn);
+  spinBtn.onclick = ()=> wheel.startAnimation();
 }
+
 
 // ====== SCRATCH & WIN ======
 function showScratch(area, level) {
