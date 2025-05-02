@@ -323,7 +323,7 @@ h2 {
 .spin-btn:disabled{opacity:.4;cursor:default}
 
 /* ==== WHEEL ==== */
-#wheel-wrap{position:relative;width:380px;margin:0 auto}
+#wheel-wrap{position:relative;width:380px;margin:0 auto;border-radius:50%}
 #wheel-pointer{
   position:absolute;top:-18px;left:50%;transform:translateX(-50%);
   font-size:2rem;color:#ff4d9b;user-select:none;pointer-events:none;
@@ -359,3 +359,9 @@ h2 {
   animation:plusOne 1.4s ease-out forwards;
 }
 
+/* clover pop */
+@keyframes clover{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}
+30%{opacity:1}100%{transform:translate(-50%,-160%) scale(1.2);opacity:0}}
+#lucky-msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+           font-size:1.4rem;color:#16a34a;pointer-events:none;
+           animation:clover 1.6s ease-out forwards;}
