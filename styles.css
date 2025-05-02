@@ -340,3 +340,22 @@ h2 {
 /* wheel polish */
 .spin-btn{min-width:130px}
 #wheel-result{margin-top:1rem}
+
+/* wheel glow while spinning */
+#wheel-wrap.spinning{
+  box-shadow:0 0 18px 6px rgba(255,51,119,.6);
+  transition:box-shadow .25s;
+}
+/* little +1 badge */
+@keyframes plusOne {
+  0%   {transform:translate(-50%,-80px) scale(.3);opacity:0}
+  20%  {opacity:1}
+  80%  {transform:translate(-50%,-140px) scale(1);opacity:1}
+ 100%  {opacity:0}
+}
+.plus-one{
+  position:absolute;left:50%;top:0;
+  font-size:2rem;color:#ff2e75;pointer-events:none;
+  animation:plusOne 1.4s ease-out forwards;
+}
+
