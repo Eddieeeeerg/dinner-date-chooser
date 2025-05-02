@@ -647,6 +647,7 @@ deck = shuffle([
      picked = true;
       card.classList.add('winner');
      showRestaurantOverlay(cardData.data);
+      grid.style.pointerEvents = 'none';      // ⬅️ lock the rest of the grid
 
       // reveal rest after 30 s
      setTimeout(()=> {
