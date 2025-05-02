@@ -295,5 +295,15 @@ h2 {
 #budget-display{font-weight:700;margin-left:.25rem}
 .budget-msg{margin:.4rem auto 0;font-size:.9rem;color:#c41f66}
 
+/* ==== METHOD CHOOSER ==== */
+.method-grid{
+  display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin:1.5rem 0;
+}
+.method-grid button{
+  width:100px;height:100px;border-radius:15px;border:3px solid #ff4d9b;
+  background:#fff;font-size:1.8rem;line-height:1.2;cursor:pointer;
+  transition:transform .2s;
+}
+.method-grid button:hover{transform:scale(1.08);}
 
 
