@@ -336,3 +336,4 @@ h2 {
 .dice-btn:hover,.spin-btn:enabled:hover{transform:scale(1.08);}
 .spin-btn:disabled{opacity:.4;cursor:default}
 
+#wheel-result{margin-top:1rem}
