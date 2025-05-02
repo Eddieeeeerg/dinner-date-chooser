@@ -593,7 +593,11 @@ function showCards(area, level){
 ]).slice(0, 2);   // still pick 1–2 messages
 
 
-  deck = shuffle([
+ /* 1. build a deck: up to 6 restaurants */
+let deck = shuffle(getFilteredList(area, level)).slice(0, 6);
+
+/* 2. mix in 1‑2 fun‑message cards */
+deck = shuffle([
     ...deck.map(r => ({type:'rest',  data:r})),
     ...messages.map(m => ({type:'msg',   data:m}))
   ]);
@@ -604,7 +608,7 @@ function showCards(area, level){
   container.appendChild(grid);
 
   let picked = false;              // a restaurant already chosen?
-  let revealTimer = null;
+  
 
   deck.forEach((cardData, idx) =>{
     const card = document.createElement('div');
@@ -627,7 +631,7 @@ function showCards(area, level){
     /* click behaviour */
     card.onclick = () =>{
       if(card.classList.contains('flipped') ||               // already open
-         (picked && !cardData.type==='msg')) return;         // locked after win
+         (picked && cardData.type!=='msg')) return;          // locked after win
 
       card.classList.add('flipped');
 
@@ -640,12 +644,12 @@ function showCards(area, level){
       }
 
       /* --- RESTAURANT win --------------------------------------- */
-      picked = true;
+     picked = true;
       card.classList.add('winner');
-      showDetails(cardData.data);                            // reuse existing helper
+     showRestaurantOverlay(cardData.data);
 
       // reveal rest after 30 s
-      revealTimer = setTimeout(()=> {
+     setTimeout(()=> {
         document.querySelectorAll('.card-flip:not(.flipped)')
                 .forEach(c=>c.classList.add('flipped'));
       }, 30000);
@@ -667,6 +671,16 @@ function showCards(area, level){
       after();
     };
   }
+  function showRestaurantOverlay(rest){
+  const ov=document.createElement('div');
+  ov.id='card-overlay';
+  ov.innerHTML = `
+    <div class="box" style="max-width:320px">
+      ${makeResultCard(rest).outerHTML}
+    </div>`;
+  document.body.appendChild(ov);
+}
+
 }
 
 // ====== RICH DETAILS PANEL ======
