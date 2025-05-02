@@ -400,3 +400,11 @@ h2 {
   max-width:280px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.3);
 }
 #card-overlay button{margin-top:1rem;}
+
+/* --- keep cards face‑up after flip ---------------------------------- */
+.card-flip:not(.flipped) .back      { visibility:hidden; }
+.card-flip.flipped      .front,
+.card-flip.winner       .front      { visibility:hidden; }
+.card-flip.flipped      .back,
+.card-flip.winner       .back       { visibility:visible; }
+
