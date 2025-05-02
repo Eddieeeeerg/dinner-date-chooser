@@ -359,7 +359,21 @@ function showWheel(area, level){
     startWheel(list, spins);
   };
 }
+function flashPlusOne(){
+  const plus = document.createElement('span');
+  plus.textContent = '+1';
+  plus.className = 'plus-one';
+  $('wheel-wrap').appendChild(plus);
+  setTimeout(()=>plus.remove(), 1400);
+}
 
+function flashLucky(){
+  const msg = document.createElement('div');
+  msg.id = 'lucky-msg';
+  msg.textContent = 'You\'re going to have a lucky day, Ellie ✨';
+  $('wheel-wrap').appendChild(msg);
+  setTimeout(()=>msg.remove(), 1600);
+}
 function startWheel(list, spinsLeft){
   const title = $('picker-title');
   const box   = $('picker-container');
@@ -432,8 +446,6 @@ while(list.length < 6)
   spinBtn.disabled  = spinsLeft === 0;
 }
 
-       
-      }
     }
   });
 
@@ -446,21 +458,6 @@ while(list.length < 6)
   spinBtn.onclick = () => {
   if(spinsLeft === 0) return;
   playSpinSound();
-    function flashPlusOne(){
-  const plus = document.createElement('span');
-  plus.textContent = '+1';
-  plus.className = 'plus-one';
-  $('wheel-wrap').appendChild(plus);
-  setTimeout(()=>plus.remove(), 1400);
-}
-
-function flashLucky(){
-  const msg = document.createElement('div');
-  msg.id = 'lucky-msg';
-  msg.textContent = 'You\'re going to have a lucky day, Ellie ✨';
-  $('wheel-wrap').appendChild(msg);
-  setTimeout(()=>msg.remove(), 1600);
-}
 
   $('wheel-wrap').classList.add('spinning');
 
