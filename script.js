@@ -323,7 +323,12 @@ function shuffle(array) {
   }
   return array;
 }
-
+// ─── helper: play the spin sound ───────────────────────────────────────
+function playSpinSound(){
+  const snd = $('spin-audio');
+  snd.currentTime = 0;
+  snd.play().catch(()=>{});          // ignore autoplay blocking on some mobiles
+}
 
 // ====== SPINNING WHEEL v2 ==============================================
 function showWheel(area, level){
@@ -360,6 +365,10 @@ function startWheel(list, spinsLeft){
   const box   = $('picker-container');
   box.innerHTML = '';
   $('wheelcanvas').style.display='block';
+  $('wheel-wrap').classList.remove('spinning');
+  const resultDiv = document.createElement('div');
+  resultDiv.id = 'wheel-result';
+  box.appendChild(resultDiv);
   title.textContent = `Spins left: ${spinsLeft}`;
 
   /* ── pad to exactly 6 slices ── */
@@ -420,6 +429,8 @@ function startWheel(list, spinsLeft){
   /* reset & spin */
   spinBtn.onclick=()=>{
     if(spinsLeft===0) return;
+    playSpinSound();
+    $('wheel-wrap').classList.add('spinning');
     window.wheel.stopAnimation(false);
     window.wheel.rotationAngle=0;      // full power every time
     window.wheel.draw();
