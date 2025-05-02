@@ -403,12 +403,22 @@ function startWheel(list, spinsLeft){
       duration:5,
       spins:Math.floor(Math.random()*3)+5,
       callbackFinished:(seg)=>{
+        $('wheel-wrap').classList.remove('spinning');
         const pick=list.find(r=>r.name.startsWith(seg.text.replace('…','')));
         if(pick && !pick.bonus){
           resultDiv.innerHTML='';
           resultDiv.appendChild(makeResultCard(pick));
           spinsLeft--;                 // real pick uses up a spin
         }
+        // BONUS slice: if it’s a bonus and you’re on your last spin, grant +1
+        if (pick && pick.bonus && spinsLeft === 1) {
+          spinsLeft++;
+          const plus = document.createElement('span');
+          plus.textContent = '+1';
+          plus.className = 'plus-one';
+           $('wheel-wrap').appendChild(plus);
+          setTimeout(() => plus.remove(), 1400);
+          }
         title.textContent=`Spins left: ${spinsLeft}`;
         spinBtn.disabled = spinsLeft===0;
       }
