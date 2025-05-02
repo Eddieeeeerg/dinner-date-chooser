@@ -108,8 +108,19 @@ function initBudgetSlider(){
     100:"⚠️ Error: Ellie is crazy!",101:"I won’t let you go further."
   };
  
-  /*****  METHOD-CHOOSER  *****/
-  function makeResultCard(r){
+ /* ─── helper: hide areas that are over budget ───────────────────────── */
+function refreshAreaAvailability(){
+  document.querySelectorAll('#areas .card').forEach(card=>{
+    const area = card.dataset.area;
+    if(area === 'RANDOM' || area === 'ANY'){ card.style.display=''; return; }
+    const hasCheap = (restaurantData[area]||[])
+                     .some(r => r.avgCost <= budgetLimit);
+    card.style.display = hasCheap ? '' : 'none';
+  });
+}
+
+/* ─── RESULT‑CARD builder ───────────────────────────────────────────── */
+function makeResultCard(r){
   const div = document.createElement('div');
   div.className = 'result-card';
   div.innerHTML = `
@@ -121,6 +132,8 @@ function initBudgetSlider(){
   `;
   return div;
 }
+
+/* ─── RANDOM & LIST pickers ─────────────────────────────────────────── */
 function showRandom(area, level){
   const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
@@ -128,7 +141,7 @@ function showRandom(area, level){
   const r = list[Math.floor(Math.random()*list.length)];
   $('picker-title').textContent = 'Winner 🎉';
   const out = $('picker-content');
-  out.innerHTML = '';            // clear
+  out.innerHTML = '';
   out.appendChild(makeResultCard(r));
 }
 
@@ -146,9 +159,18 @@ function pickerEmpty(){
   $('picker-title').textContent = 'No restaurants match that budget 😢';
   $('picker-content').innerHTML = '';
 }
-function showWheel(){ $('picker-title').textContent='(Wheel coming soon!)'; $('picker-content').innerHTML=''; }
-function showCards(){ $('picker-title').textContent='(Cards coming soon!)'; $('picker-content').innerHTML=''; }
 
+/* ─── placeholders until we build Wheel / Cards ─────────────────────── */
+function showWheel(){
+  $('picker-title').textContent = '(Wheel coming soon!)';
+  $('picker-content').innerHTML = '';
+}
+function showCards(){
+  $('picker-title').textContent = '(Cards coming soon!)';
+  $('picker-content').innerHTML = '';
+}
+
+/* ─── METHOD‑CHOOSER wiring ─────────────────────────────────────────── */
 function initMethodChooser(){
   $('method-buttons').addEventListener('click', e=>{
     const btn = e.target.closest('button');
@@ -156,7 +178,7 @@ function initMethodChooser(){
     const m = btn.dataset.method;
 
     $('method-section').hidden = true;   // hide chooser
-    $('picker-section').hidden = false;  // show mechanic area
+    $('picker-section').hidden = false;  // show mechanic output
 
     if(m === 'wheel')       showWheel(currentArea, currentLevel);
     else if(m === 'random') showRandom(currentArea, currentLevel);
@@ -165,34 +187,11 @@ function initMethodChooser(){
   });
 }
 
-
-function refreshAreaAvailability(){
-  document.querySelectorAll('#areas .card').forEach(card=>{
-    const area = card.dataset.area;
-    if (area === 'RANDOM' || area === 'ANY'){ card.style.display=''; return; }
-    const hasCheap = (restaurantData[area]||[])
-                     .some(r=>r.avgCost<=budgetLimit);
-    card.style.display = hasCheap ? '' : 'none';
-  });
-}
-
-
-  function updateUI(){
-    const v = +slider.value;              // 10 – 101
-    budgetLimit = v * 1000;              // store as ₩
-    disp.textContent = (v*1000).toLocaleString() + "₩";
-
-    let txt = "";
-    if (v <= 25)       txt = "Low-range price";
-    else if (v <= 35)  txt = "Medium-range price";
-    else if (v <= 40)  txt = "Almost expensive 😅";
-    else               txt = exact[v] || "";
-    msgBox.textContent = txt;
-refreshAreaAvailability();
-
-  }
-
-}                          // ← single brace, and STOP.
+/* ─── back button inside picker section ─────────────────────────────── */
+$('back-btn').onclick = () => {
+  $('picker-section').hidden = true;
+  $('method-section').hidden = false;
+};
 /*****  RESULT‑CARD HELPER  ***************************************************/
 function makeResultCard(r){
   const div = document.createElement('div');
