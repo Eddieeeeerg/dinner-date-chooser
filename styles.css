@@ -365,3 +365,38 @@ h2 {
 #lucky-msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
            font-size:1.4rem;color:#16a34a;pointer-events:none;
            animation:clover 1.6s ease-out forwards;}
+
+/* === Card grid ===================================================== */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:1rem;justify-items:center;max-width:760px;margin:0 auto;
+}
+.card-flip{
+  position:relative;width:120px;height:150px;
+  transform-style:preserve-3d;transition:transform .6s ease;
+  cursor:pointer;
+}
+.card-flip.flipped{transform:rotateY(180deg);}
+.card-flip .face{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  backface-visibility:hidden;border:2px solid hotpink;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;font-size:3rem;
+}
+.card-flip .back{
+  transform:rotateY(180deg);padding:.3rem;text-align:center;
+}
+.card-flip img{width:100%;height:80px;object-fit:cover;border-radius:4px;}
+/* winner zoom */
+.card-flip.winner{transform:scale(1.2) rotateY(180deg);z-index:10;}
+/* overlay for prize message */
+#card-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;z-index:20;
+}
+#card-overlay .box{
+  background:#fff;border-radius:12px;padding:1.8rem 2.2rem;
+  max-width:280px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+#card-overlay button{margin-top:1rem;}
