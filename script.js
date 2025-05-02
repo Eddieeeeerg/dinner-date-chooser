@@ -107,7 +107,22 @@ function initBudgetSlider(){
     94:"So...",95:".....",96:"...I...",97:"...hate...",98:"...YOU...",99:"....😢....",
     100:"⚠️ Error: Ellie is crazy!",101:"I won’t let you go further."
   };
- 
+
+function updateUI(){
+  const v = +slider.value;
+  budgetLimit          = v * 1000;
+  disp.textContent     = v.toLocaleString() + " 000₩";
+  if      (v <= 25) msgBox.textContent = "Low-range price";
+  else if (v <= 35) msgBox.textContent = "Medium-range price";
+  else if (v <= 40) msgBox.textContent = "Almost expensive 😅";
+  else              msgBox.textContent = exact[v] || "";
+  refreshAreaAvailability();
+}
+slider.addEventListener('input',  updateUI);
+slider.addEventListener('change', updateUI);
+updateUI();                       // first render
+}                                   // ← THIS closes initBudgetSlider()
+
  /* ─── helper: hide areas that are over budget ───────────────────────── */
 function refreshAreaAvailability(){
   document.querySelectorAll('#areas .card').forEach(card=>{
