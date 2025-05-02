@@ -540,50 +540,101 @@ function showScratch(area, level) {
 }
 
 
-// ====== FLIPPING CARDS ======
-function showCards(area, level) {
+/* ====== FLIPPING CARDS 2.0 ========================================= */
+function showCards(area, level){
   $('wheelcanvas').style.display = 'none';
   const container = $('picker-container');
   container.innerHTML = '';
 
-  const list   = shuffle(getFilteredList(area, level)).slice(0, 4);
-  const prizes = shuffle([
-    'You are my favorite person ever Ellie',
-    'You are cute',
-    'Ellie Rodriguez',
-    '내 사랑 뿜뿜',
-    'Hello?'
-  ]).slice(0, 2);
+  /* --- build deck -------------------------------------------------- */
+  let deck = shuffle(getFilteredList(area, level)).slice(0, 6);   // up to 6 rest.
+  const messages = shuffle([
+    '🐥 You won 1 forehead kiss — redeemable now',
+    '📷 You get 1 forced‑but‑cute photo with Eddie today',
+    '🕺 Eddie must do a 10‑second awkward dance for you',
+    '🤫 5 min uninterrupted talking credit – starts now',
+    '💬 Retry card — choose again!',
+    '🐸 Frog mode unlocked: Eddie must jump now',
+    '💞 Ellie must kiss Eddie on the cheek right now (yay!)',
+    '🎤 Ellie must whisper her favourite word dramatically',
+    '🔁 Ellie can replay one previous card — choose wisely',
+    '🧃 Ellie wins 1 imaginary juice box — use it wisely'
+  ]).slice(0, 2);                         // 1–2 messages
 
-  const cards = shuffle([
-    ...list.map(r => ({ type: 'rest',  data: r })),
-    ...prizes.map(p => ({ type: 'prize', data: p }))
+  deck = shuffle([
+    ...deck.map(r => ({type:'rest',  data:r})),
+    ...messages.map(m => ({type:'msg',   data:m}))
   ]);
 
-  cards.forEach((c, i) => {
+  /* --- render grid ------------------------------------------------- */
+  const grid = document.createElement('div');
+  grid.className = 'card-grid';
+  container.appendChild(grid);
+
+  let picked = false;              // a restaurant already chosen?
+  let revealTimer = null;
+
+  deck.forEach((cardData, idx) =>{
     const card = document.createElement('div');
     card.className = 'card-flip';
-    const front = document.createElement('div');
-    front.className = 'front';
-    front.textContent = '🂠';
-    const back  = document.createElement('div');
-    back.className = 'back';
-    if (c.type === 'rest') {
-      back.innerHTML = `<img src="${c.data.img}" /><p>${c.data.name}</p>`;
-    } else {
-      back.innerHTML = `<p>${c.data}</p>`;
+    card.innerHTML = `
+       <div class="face front">🂠</div>
+       <div class="face back"></div>`;
+    grid.appendChild(card);
+
+    /* back‑face content */
+    const back = card.querySelector('.back');
+    if(cardData.type==='rest'){
+      back.innerHTML = `
+        <img src="${cardData.data.img}" alt="">
+        <p style="font-size:.8rem">${cardData.data.name}</p>`;
+    }else{
+      back.innerHTML = `<p style="font-size:.9rem">${cardData.data}</p>`;
     }
-    card.append(front, back);
-    container.appendChild(card);
-    card.onclick = () => {
+
+    /* click behaviour */
+    card.onclick = () =>{
+      if(card.classList.contains('flipped') ||               // already open
+         (picked && !cardData.type==='msg')) return;         // locked after win
+
       card.classList.add('flipped');
-      setTimeout(() => {
-        document
-          .querySelectorAll('.card-flip:not(.flipped)')
-          .forEach(o => o.classList.add('flipped'));
+
+      /* --- MESSAGE card ------------------------------------------ */
+      if(cardData.type === 'msg'){
+        showOverlay(cardData.data, ()=>{                     // callback on “try again”
+          card.onclick = null;                               // keep it inert
+        });
+        return;
+      }
+
+      /* --- RESTAURANT win --------------------------------------- */
+      picked = true;
+      card.classList.add('winner');
+      showDetails(cardData.data);                            // reuse existing helper
+
+      // reveal rest after 30 s
+      revealTimer = setTimeout(()=> {
+        document.querySelectorAll('.card-flip:not(.flipped)')
+                .forEach(c=>c.classList.add('flipped'));
       }, 30000);
     };
   });
+
+  /* helper – overlay for messages */
+  function showOverlay(text, after){
+    const ov=document.createElement('div');
+    ov.id='card-overlay';
+    ov.innerHTML=`
+       <div class="box">
+         <p style="font-size:1.1rem;margin-bottom:.8rem">${text}</p>
+         <button class="btn">Try again</button>
+       </div>`;
+    document.body.appendChild(ov);
+    ov.querySelector('button').onclick=()=>{
+      ov.remove();
+      after();
+    };
+  }
 }
 
 // ====== RICH DETAILS PANEL ======
