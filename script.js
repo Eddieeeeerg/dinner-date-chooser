@@ -154,7 +154,11 @@ refreshAreaAvailability();
 
  slider.addEventListener('input', updateUI);
    updateUI(); // initial text
-+}
+/* keep this closing brace – it ends initBudgetSlider() */
+slider.addEventListener('input', updateUI);
+updateUI(); // initial text
+}
+
 
 // ==== ONE-TIME HEART BUBBLES ON PAGE LOAD ====
 function launchHeartBubbles() {
