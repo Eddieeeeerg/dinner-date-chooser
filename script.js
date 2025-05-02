@@ -432,17 +432,7 @@ while(list.length < 6)
   spinBtn.disabled  = spinsLeft === 0;
 }
 
-        // BONUS slice: if it’s a bonus and you’re on your last spin, grant +1
-        if (pick && pick.bonus && spinsLeft === 1) {
-          spinsLeft++;
-          const plus = document.createElement('span');
-          plus.textContent = '+1';
-          plus.className = 'plus-one';
-           $('wheel-wrap').appendChild(plus);
-          setTimeout(() => plus.remove(), 1400);
-          }
-        title.textContent=`Spins left: ${spinsLeft}`;
-        spinBtn.disabled = spinsLeft===0;
+       
       }
     }
   });
