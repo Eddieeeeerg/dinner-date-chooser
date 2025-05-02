@@ -328,7 +328,7 @@ function shuffle(array) {
 // ====== SPINNING WHEEL (with dice picks 1‑6 spins) =========================
 function showWheel(area, level){
   const title = $('picker-title');
-  const box   = $('picker-content');
+  const box   = $('picker-container');
   box.innerHTML = '';                        // clear
   $('wheelcanvas').style.display = 'block';  // show canvas
 
@@ -360,7 +360,7 @@ function showWheel(area, level){
 /* helper that actually draws + spins the wheel */
 function startWheel(list, spinsLeft){
   const title = $('picker-title');
-  const box   = $('picker-content');
+  const box   = $('picker-container');
   box.innerHTML = '';                // clear dice
   title.textContent = `Spins left: ${spinsLeft}`;
 
