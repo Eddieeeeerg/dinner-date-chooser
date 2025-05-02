@@ -546,20 +546,52 @@ function showCards(area, level){
   const container = $('picker-container');
   container.innerHTML = '';
 
-  /* --- build deck -------------------------------------------------- */
-  let deck = shuffle(getFilteredList(area, level)).slice(0, 6);   // up to 6 rest.
   const messages = shuffle([
-    '🐥 You won 1 forehead kiss — redeemable now',
-    '📷 You get 1 forced‑but‑cute photo with Eddie today',
-    '🕺 Eddie must do a 10‑second awkward dance for you',
-    '🤫 5 min uninterrupted talking credit – starts now',
-    '💬 Retry card — choose again!',
-    '🐸 Frog mode unlocked: Eddie must jump now',
-    '💞 Ellie must kiss Eddie on the cheek right now (yay!)',
-    '🎤 Ellie must whisper her favourite word dramatically',
-    '🔁 Ellie can replay one previous card — choose wisely',
-    '🧃 Ellie wins 1 imaginary juice box — use it wisely'
-  ]).slice(0, 2);                         // 1–2 messages
+  '🐥 You won 1 forehead kiss — redeemable now',
+  '📷 You get 1 forced-but-cute photo with Eddie today',
+  '🕺 Eddie must do a 10-second awkward dance for you',
+  '📖 Eddie reads you one page of any book — dramatic voices included',
+  '🤫 Eddie must not interrupt you for 5 full minutes (timer starts now and refundable for a kiss in the cheek)',
+  '🧠 Eddie will now yap a random fun fact no one asked for and maybe he made it up too',
+  'You are now allowed to ignore 1 of Eddie’s bad jokes (for the sake of both of us)',
+  '💬 Retry card — choose again!',
+  '🐸 Frog mode unlocked: Eddie must jump right now',
+  '💋 Eddie blows you a kiss dramatically',
+  '🤝 You get 10 full seconds of double hand-holding (no pulling away allowed)',
+  '🤏 You may squish Eddie’s cheeks for 7 seconds',
+  '💞 Ellie must kiss Eddie on the cheek right now (yay!)',
+  '📚 Ellie must recite a quote from any book she remembers',
+  '🃏 Ellie has to make up a terrible joke and say it with a straight face',
+  '🧙‍♀️ Ellie becomes fortune teller — predict Eddie’s tomorrow’s future in 5 words',
+  '🧙‍♀️ Eddie becomes fortune teller — predict Ellie’s tomorrow’s future in 5 words',
+  '🎤 Ellie must whisper her favorite word dramatically',
+  '📓 Ellie tells Eddie one secret (silly or real) — must be dramatic',
+  '🧍‍♂️ Ellie and Eddie have to lock eyes until someone laughs or 30 seconds pass',
+  '🛸 Teleport hug: both of you hug like you’ve just reunited after 5 years',
+  '🎮 Ellie can control Eddie like a video game character for 30 seconds',
+  '🍞 You both must argue passionately about pineapple on pizza — now',
+  '🐤 Eddie must speak in a baby bird voice for 10 seconds',
+  '🛑 Ellie says “STOP” and Eddie must freeze like a statue for 5 seconds (5-minute redeemable)',
+  '🔁 Ellie can replay one previous card — choose wisely',
+  '🌍 Eddie can only speak Spanish to you for 3 minutes (good luck 🤠)',
+  '🌍 Ellie can only speak Korean to Eddie for 3 minutes (화이팅!)',
+  '⏱️ Ellie must say 1 word in Spanish — you have 5 seconds!',
+  '⏱️ Eddie must say 1 word in Korean — you have 5 seconds!',
+  '🐱 Ellie must meow right now. No questions.',
+  '🐶 Eddie must bark, just once. Like, convincingly.',
+  '🐰 Ellie must say “I’m a bunny” in her cutest voice',
+  '🧠 Eddie must compliment Ellie using 1 word only (creative mode on)',
+  '✋ Eddie must pet your head gently — redeemable now',
+  '🧍‍♀️ Ellie stands still; Eddie must spin around her like a weirdo for 5 seconds',
+  '🧽 Eddie must "clean" Ellie’s aura with his hands and dramatic sound effects',
+  '🎙️ Ellie has to give a dramatic Oscar speech about… Eddie',
+  '😤 You must both pretend to be in a K-drama sad scene — go!',
+  '🧃 Ellie wins 1 imaginary juice box — use it wisely',
+  '🎲 Ellie has 10 seconds to come up with a nickname for Eddie and use it all day',
+  '🎙️ You both must act like strangers meeting for the first time, right now',
+  '💼 Ellie becomes Eddie’s manager for 60 seconds — give him orders'
+]).slice(0, 2);   // still pick 1–2 messages
+
 
   deck = shuffle([
     ...deck.map(r => ({type:'rest',  data:r})),
