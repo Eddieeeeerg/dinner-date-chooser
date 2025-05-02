@@ -71,6 +71,7 @@ const restaurantData = {
 window.addEventListener('DOMContentLoaded', () => {
   renderAreas();
 initBudgetSlider(); 
+refreshAreaAvailability(); 
   $('reset-btn').addEventListener('click', resetAll);
 });
 /***** BUDGET SLIDER *****/
@@ -103,6 +104,16 @@ function initBudgetSlider(){
     94:"So...",95:".....",96:"...I...",97:"...hate...",98:"...YOU...",99:"....😢....",
     100:"⚠️ Error: Ellie is crazy!",101:"I won’t let you go further."
   };
+function refreshAreaAvailability(){
+  document.querySelectorAll('#areas .card').forEach(card=>{
+    const area = card.dataset.area;
+    if (area === 'RANDOM' || area === 'ANY'){ card.style.display=''; return; }
+    const hasCheap = (restaurantData[area]||[])
+                     .some(r=>r.avgCost<=budgetLimit);
+    card.style.display = hasCheap ? '' : 'none';
+  });
+}
+
 
   function updateUI(){
     const v = +slider.value;              // 10 – 101
@@ -115,6 +126,8 @@ function initBudgetSlider(){
     else if (v <= 40)  txt = "Almost expensive 😅";
     else               txt = exact[v] || "";
     msgBox.textContent = txt;
+refreshAreaAvailability();
+
   }
 
   slider.addEventListener('input', updateUI);
