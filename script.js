@@ -431,10 +431,7 @@ function startWheel(list, spinsLeft){
   spinBtn.textContent='🌀 Spin!';
   box.appendChild(spinBtn);
 
-  /* ── winner card container ── */
-  const resultDiv=document.createElement('div');
-  resultDiv.id='wheel-result';
-  box.appendChild(resultDiv);
+
 
   /* reset & spin */
   spinBtn.onclick=()=>{
