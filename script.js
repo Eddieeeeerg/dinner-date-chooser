@@ -325,87 +325,92 @@ function shuffle(array) {
 }
 
 
-// ====== SPINNING WHEEL (with dice picks 1‑6 spins) =========================
+// ====== SPINNING WHEEL v2 ==============================================
 function showWheel(area, level){
   const title = $('picker-title');
   const box   = $('picker-container');
-  box.innerHTML = '';                        // clear
-  $('wheelcanvas').style.display = 'block';  // show canvas
+  box.innerHTML = '';                     // clear cards
+  $('wheel-wrap').hidden = false;         // show wrapper
+  $('wheelcanvas').style.display='none';  // hide until dice rolled
 
-  // ---------- 1. build filtered list ----------
-  let list = area === 'ANY'
-               ? Object.values(restaurantData).flat()
-               : (restaurantData[area] || []).slice();
-  list = list.filter(r => r.avgCost <= budgetLimit);
-  if      (level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
-  else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
-  if(!list.length){ pickerEmpty(); return; }
+  // ---------- 1. filtered list ----------
+  let list = area==='ANY' ? Object.values(restaurantData).flat()
+                          : (restaurantData[area]||[]).slice();
+  list = list.filter(r=>r.avgCost<=budgetLimit);
+  if(level==='Healthy')      list=list.filter(r=>r.avgCost<=30000);
+  else if(level==='Less Healthy') list=list.filter(r=>r.avgCost>30000);
 
-  // pad to ≥6 so wheel looks good
-  while (list.length < 6) list.push({ name:'✨ Bonus ✨', bonus:true });
+  if(!list.length){ pickerEmpty(); $('wheel-wrap').hidden=true; return; }
 
-  // ---------- 2. dice to decide spins ----------
-  title.textContent = 'Tap the Die to get your spins!';
+  // ---------- 2. dice button ----------
+  title.textContent = 'Tap the die to get your spins!';
   const dice = document.createElement('button');
-  dice.textContent = '🎲';
-  dice.className   = 'dice-btn';
+  dice.className='dice-btn';
+  dice.textContent='🎲';
   box.appendChild(dice);
 
-  dice.onclick = ()=> {
-    const spinsLeft = Math.floor(Math.random()*6)+1;   // 1‑6
-    startWheel(list, spinsLeft);
+  dice.onclick = ()=>{
+    const spins = Math.floor(Math.random()*6)+1;  // 1‑6
+    startWheel(list, spins);
   };
 }
 
-/* helper that actually draws + spins the wheel */
 function startWheel(list, spinsLeft){
   const title = $('picker-title');
   const box   = $('picker-container');
-  box.innerHTML = '';                // clear dice
+  box.innerHTML='';                         // clear dice
+  $('wheelcanvas').style.display='block';   // show canvas
   title.textContent = `Spins left: ${spinsLeft}`;
 
-  // random pastel slice colours
+  // pad to 6 slices with fun fillers
+  const fillers = ['✨ Bonus ✨','💖 Free Kiss','🤗 Free Hug','🍀 Lucky'];
+  while(list.length<6)
+    list.push({name:fillers[(list.length)%fillers.length],bonus:true});
+
+  // slice colours
   const colors = shuffle([
-    '#ffd1dc','#ffdde1','#ffe5b4','#cffafe','#e9d5ff',
-    '#d1fae5','#fcd34d','#f9a8d4','#a7f3d0','#fca5a5'
+    '#b7e4c7','#ffd6ff','#caffbf','#fdffb6','#a0c4ff','#ffadad'
   ]);
 
-  // build segments array for Winwheel
-  const segs = list.map((r,i)=>({
-    text: r.name,
-    fillStyle: colors[i % colors.length],
+  // build segments
+  const segments = list.map((r,i)=>({
+    text:(r.name.length>18? r.name.slice(0,16)+'…':r.name),
+    fillStyle:colors[i%colors.length],
+    textOrientation:'horizontal',
+    textAlignment:'outer',
     textFillStyle:'#333'
   }));
 
-  // create wheel (destroy previous if any)
+  // destroy old wheel if exists
   if(window.wheel) window.wheel.stopAnimation(false);
-  const wheel = window.wheel = new Winwheel({
+
+  window.wheel = new Winwheel({
     canvasId:'wheelcanvas',
     outerRadius:180,
-    textFontSize:14,
-    segments: segs,
+    lineWidth:2,
+    segments,
     animation:{
       type:'spinToStop',
-      duration:6,
-      spins:Math.floor(Math.random()*3)+5, // 5‑7 revs
+      duration:5,
+      spins:Math.floor(Math.random()*3)+5,
       callbackFinished:(seg)=> {
-        const pick = list.find(r=>r.name===seg.text);
+        const pick=list.find(r=>r.name.startsWith(seg.text.replace('…','')));
         if(pick && !pick.bonus) showDetails(pick);
-        else alert('🎉 Bonus! Spin again');
         spinsLeft--;
         title.textContent = `Spins left: ${spinsLeft}`;
-        if(spinsLeft===0) spinBtn.disabled = true;
+        if(!spinsLeft) spinBtn.disabled=true;
       }
     }
   });
 
-  // add Spin button
-  const spinBtn = document.createElement('button');
-  spinBtn.textContent = '🎡 Spin!';
-  spinBtn.className   = 'spin-btn';
+  // ---------- 3. Spin button ----------
+  const spinBtn=document.createElement('button');
+  spinBtn.className='spin-btn';
+  spinBtn.textContent='🌀 Spin!';
   box.appendChild(spinBtn);
-  spinBtn.onclick = ()=> wheel.startAnimation();
+  spinBtn.onclick=()=>window.wheel.startAnimation();
 }
+
 
 
 // ====== SCRATCH & WIN ======
