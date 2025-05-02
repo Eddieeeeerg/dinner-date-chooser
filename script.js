@@ -152,9 +152,9 @@ refreshAreaAvailability();
 
   }
 
-  slider.addEventListener('input', updateUI);
-  updateUI(); // initial text
-}
+ slider.addEventListener('input', updateUI);
+   updateUI(); // initial text
++}
 
 // ==== ONE-TIME HEART BUBBLES ON PAGE LOAD ====
 function launchHeartBubbles() {
@@ -250,21 +250,6 @@ function startPicker(area, level) {
 
 
 
-// ====== PHASE 4: Pick a Mechanic ======
-function startPicker(area, level) {
-  $('category-section').hidden = true;
-  $('picker-section').hidden   = false;
-
-  // decide which mechanic to run
-  const roll = Math.random() * 100;
-  let mech;
-  if      (roll < 10)  mech = 'wheel';
-  else if (roll < 50)  mech = 'scratch';
-  else if (roll < 90)  mech = 'cards';
-  else                 mech = 'list';
-
-  launchMechanic(mech, area, level);
-}
 
 // ====== DISPATCH ======
 function launchMechanic(mech, area, level) {
@@ -500,7 +485,10 @@ function showList(area, level) {
   $('picker-title').textContent = 'All Options:';
   const container = $('picker-container');
   container.innerHTML = '';
-  let list = (restaurantData[area] || []).slice();
+  let list = area === 'ANY'
+? Object.values(restaurantData).flat()
+: (restaurantData[area] || []).slice();
+list = list.filter(r => r.avgCost <= budgetLimit);
   if (level === 'Healthy') list = list.filter(r => r.avgCost <= 30000);
   else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
   list.forEach(r => {
