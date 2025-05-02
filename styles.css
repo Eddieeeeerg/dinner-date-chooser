@@ -337,3 +337,6 @@ h2 {
 .spin-btn:disabled{opacity:.4;cursor:default}
 
 #wheel-result{margin-top:1rem}
+/* wheel polish */
+.spin-btn{min-width:130px}
+#wheel-result{margin-top:1rem}
