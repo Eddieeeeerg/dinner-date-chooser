@@ -34,7 +34,22 @@
       <div id="health-options" class="grid"></div>
     </section>
 
-    <section id="picker-section" hidden>
+
+
+  </main>
+  <!-- ====== PHASE 3: Method Chooser ====== -->
+<section id="method-section" hidden>
+  <h2>How should we choose?</h2>
+  <div id="method-buttons" class="method-grid">
+    <button data-method="wheel">🌀<br>Wheel</button>
+    <button data-method="random">🎲<br>Random</button>
+    <button data-method="cards">🃏<br>Cards</button>
+    <button data-method="list">📋<br>All</button>
+  </div>
+</section>
+
+  <!-- ====== PHASE 4: Picker Output ====== -->
+<section id="picker-section" hidden>
   <h2 id="picker-title"></h2>
 
   <!-- spinning wheel -->
@@ -50,22 +65,8 @@
   <div id="picker-content"></div>
 
   <!-- controls -->
-  <button id="back-btn" class="primary" style="margin-top:1.5rem;">← Back</button>
+  <button id="back-btn" class="primary">← Back</button>
   <button id="reset-btn">Start Over</button>
-</section>
-
-
-
-  </main>
-  <!-- ====== PHASE 3: Method Chooser ====== -->
-<section id="method-section" hidden>
-  <h2>How should we choose?</h2>
-  <div id="method-buttons" class="method-grid">
-    <button data-method="wheel">🌀<br>Wheel</button>
-    <button data-method="random">🎲<br>Random</button>
-    <button data-method="cards">🃏<br>Cards</button>
-    <button data-method="list">📋<br>All</button>
-  </div>
 </section>
 
 <!-- Winwheel.js for the spinning wheel -->
