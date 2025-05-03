@@ -150,7 +150,9 @@ function makeResultCard(r){
 
 /* ─── RANDOM & LIST pickers ─────────────────────────────────────────── */
 function showRandom(area, level){
-  const list = getFilteredList(area, level);
+  $('wheel-wrap').hidden        = true;
+$('wheelcanvas').style.display = 'none';
+const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
 
   const r = list[Math.floor(Math.random()*list.length)];
@@ -161,6 +163,9 @@ function showRandom(area, level){
 }
 
 function showList(area, level){
+  $('wheel-wrap').hidden        = true;
+  $('wheelcanvas').style.display = 'none';
+
   const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
 
