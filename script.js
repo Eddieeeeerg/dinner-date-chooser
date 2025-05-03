@@ -148,19 +148,27 @@ function makeResultCard(r){
   return div;
 }
 
-/* ─── RANDOM & LIST pickers ─────────────────────────────────────────── */
+/* -------------------------------------------------- RANDOM PICK ---- */
 function showRandom(area, level){
-  $('wheel-wrap').hidden        = true;
-$('wheelcanvas').style.display = 'none';
-const list = getFilteredList(area, level);
+  // make sure the wheel is gone
+  $('wheel-wrap').hidden = true;
+  $('wheelcanvas').style.display = 'none';
+
+  const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
 
-  const r = list[Math.floor(Math.random()*list.length)];
+  const winner = list[Math.floor(Math.random()*list.length)];
+
   $('picker-title').textContent = 'Winner 🎉';
-  const out = $('picker-content');
-  out.innerHTML = '';
-  out.appendChild(makeResultCard(r));
+  const container = $('picker-container');
+  container.innerHTML = '';                           // wipe others
+
+  container.appendChild( makeResultCard(winner) );    // single card
+
+  /*  🔸 fire the 5 % bill wheel logic right here  */
+  maybeShowPayWheel(winner);
 }
+
 
 function showList(area, level){
   $('wheel-wrap').hidden        = true;
