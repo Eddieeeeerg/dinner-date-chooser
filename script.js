@@ -382,36 +382,59 @@ function randomOptionals(){
   return pick.map(t => ({ label:t, weight:share }));
 }
 
+/* ╔══════════════════════════════════════════════════════════════════════╗
+   ║  BILL‑SPLIT    –   self‑contained overlay with its **own** canvas   ║
+   ╚══════════════════════════════════════════════════════════════════════╝ */
 function buildPayWheel(segmentArr){
-  const wheelEl = document.createElement('canvas');
-  wheelEl.id = 'paywheel'; wheelEl.width = 320; wheelEl.height = 320;
+  /* 1. build the overlay skeleton ----------------------------------- */
+  const root   = $('overlay-root');
+  root.innerHTML = `
+      <div id="pay-overlay">
+        <div class="box">
+          <canvas id="paycanvas" width="320" height="320"></canvas>
+          <button id="pay-close" class="btn">Close</button>
+        </div>
+      </div>`;
 
-  const wrap = $('wheel-wrap');
-  wrap.hidden = false;
-  wrap.innerHTML = ''; wrap.appendChild(wheelEl);
+  /* remove on close -------------------------------------------------- */
+  root.querySelector('#pay-close').onclick = () => root.innerHTML = '';
 
-  /* Winwheel is 1‑based → prepend a dummy object */
-  const segments = [{}];
-  segmentArr.forEach(s => segments.push({ text:s.label, fillStyle:randPastel() }));
+  /* 2. Map the segment array → Winwheel segments -------------------- */
+  const segs = [{}];                                                // Winwheel is 1‑based
+  segmentArr.forEach(s => segs.push({
+    text        : s.label,
+    fillStyle   : randPastel(),
+    textFontSize: 14,
+    textAlignment:'outer',
+    textOrientation:'horizontal'
+  }));
 
-  const payWheel = new Winwheel({
-    canvasId:    'paywheel',
-    segments,
-    lineWidth:   2,
-    pointerAngle:0,
-    animation: {
-      type:            'spinToStop',
-      duration:        4,
-      spins:           5,
-      callbackFinished: showPayResult
+  /* 3. Create the wheel --------------------------------------------- */
+  const wheel = new Winwheel({
+    canvasId     : 'paycanvas',
+    outerRadius  : 150,
+    lineWidth    : 2,
+    pointerAngle : 0,
+    segments     : segs,
+    animation    : {
+      type            : 'spinToStop',
+      duration        : 4,
+      spins           : 5,
+      callbackFinished: seg =>
+         root.querySelector('.box').insertAdjacentHTML(
+           'afterbegin',
+           `<p style="font-size:1.25rem;margin-bottom:.6rem">
+              ${seg.text} 🎉
+            </p>`
+         )
     }
   });
-  payWheel.startAnimation();
 
-  function showPayResult(seg){
-    makeOverlay(seg.text + ' 🎉', 'Close', () => wrap.hidden = true);
-  }
+  /* 4. fire!  -------------------------------------------------------- */
+  playSpinSound();
+  wheel.startAnimation();
 }
+
 function randPastel(){
   return `hsl(${Math.random()*360},70%,85%)`;
 }
@@ -862,6 +885,8 @@ function resetAll() {
   $('category-section').hidden = true;
   $('area-section').hidden     = false;
 $('method-section').hidden = true;
+$('wheel-wrap').hidden = true;          
+$('wheel-wrap').innerHTML = '<div id="wheel-pointer">▼</div><canvas id="wheelcanvas" width="380" height="380"></canvas>';    
 
 }
 
