@@ -393,89 +393,77 @@ function randomOptionals(){
   return pick.map(t => ({ label:t, weight:share }));
 }
 
-/* ╔══════════════════════════════════════════════════════════════════════╗
-   ║  BILL‑SPLIT    –   self‑contained overlay with its **own** canvas   ║
-   ╚══════════════════════════════════════════════════════════════════════╝ */
+/* ╔══════════════════════════════════════════════╗
+   ║ BILL‑SPLIT WHEEL – self‑contained overlay    ║
+   ╚══════════════════════════════════════════════╝ */
 function buildPayWheel(segmentArr){
-  /* 1. build the overlay skeleton ----------------------------------- */
-  const root   = document.body;         // always top of the document
-  root.innerHTML = `
-      <div id="pay-overlay">
-       <div class="box">
-          <div style="font-size:2rem;
-           position:absolute;
-            top:-28px;
-            left:50%;
-            transform:translateX(-50%);
-            color:#ff2e75;">▼</div>
-            <canvas id="paycanvas" width="320" height="320"></canvas>
-            <button id="pay-close" class="btn">Close</button>
-        </div>
-      </div>`;
-root.querySelector('.box').insertAdjacentHTML(
-  'afterbegin',
-  '<div style="font-size:2rem;position:absolute;top:-28px;left:50%;transform:translateX(-50%);color:#ff2e75;">▼</div>'
-  );
-  /* remove on close -------------------------------------------------- */
-  root.querySelector('#pay-close').onclick = () => root.innerHTML = '';
+  /* ---------- overlay skeleton ---------- */
+  const ov       = document.createElement('div');
+  ov.id          = 'pay-overlay';
+  ov.innerHTML   = `
+     <div class="box">
+       <div style="font-size:2rem;
+                   position:absolute;
+                   top:-28px;
+                   left:50%;
+                   transform:translateX(-50%);
+                   color:#ff2e75;">▼</div>
+       <canvas id="paycanvas" width="320" height="320"></canvas>
+       <button id="pay-close">Close</button>
+     </div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('#pay-close').onclick = () => ov.remove();
 
-  /* 2. Map the segment array → Winwheel segments -------------------- */
-  // --- SEGMENTS ----------------------------------------------------------
-/* --- pretty pastel colour for every slice (Winwheel needs a HEX) --- */
-function pastel () {
-  const h = Math.floor(Math.random()*360);      // 0‑359
-  const s = 70;                                 // %
-  const l = 85;                                 // %
-  // little HSL‑to‑HEX helper
-  const f = n => {
-    const k = (n + h/30) % 12;
-    const a = s/100 * Math.min(l/100, 1 - l/100);
-    const c = l/100 - a * Math.max(Math.min(k-3, 9-k, 1), -1);
-    return Math.round(255 * c).toString(16).padStart(2,'0');
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;              // R  G  B
-}
+  /* ---------- helper – pretty pastel palette ---------- */
+  const pastelPalette = [
+    '#FFADAD','#FFD6A5','#FDFFB6','#CAFFBF',
+    '#9BF6FF','#A0C4FF','#BDB2FF','#FFC6FF'
+  ];
+  const pickColor = (() => {
+    let i = 0;                      // cycle through palette (no duplicates)
+    return () => pastelPalette[i++ % pastelPalette.length];
+  })();
 
-const segs    = [{}];                   // Winwheel is 1-based
+  /* ---------- Winwheel segments ---------- */
+  const totalW   = segmentArr.reduce((a,b)=>a + b.weight,0);
+  const segments = segmentArr.map(seg => ({
+      text            : seg.label,
+      size            : 360 * seg.weight / totalW,     // degrees
+      fillStyle       : pickColor(),
+      textFontSize    : 15,
+      textAlignment   : 'outer',
+      textOrientation : 'horizontal',
+      textFillStyle   : '#333'
+  }));
 
-// convert weight → slice-size in ‰   (Winwheel slice “size” is 0–1)
-const totalWeight = segmentArr.reduce((a,b)=>a+b.weight,0);
-
-segmentArr.forEach(s => segs.push({
-  text           : s.label,
-  size           : 360 * s.weight / totalWeight,   // Winwheel expects degrees
-  fillStyle      : pastel(),
-  textFontSize   : 14,
-  textAlignment  : 'outer',
-  textOrientation: 'horizontal'
-}));
-
-
-  /* 3. Create the wheel --------------------------------------------- */
+  /* ---------- create & spin ---------- */
   const wheel = new Winwheel({
-    canvasId     : 'paycanvas',
-    outerRadius  : 150,
-    lineWidth    : 2,
-    pointerAngle : 0,
-    segments     : segs,
-    animation    : {
-      type            : 'spinToStop',
-      duration        : 4,
-      spins           : 5,
-      callbackFinished: seg =>
-         root.querySelector('.box').insertAdjacentHTML(
-           'afterbegin',
-           `<p style="font-size:1.25rem;margin-bottom:.6rem">
-              ${seg.text} 🎉
-            </p>`
-         )
-    }
+      canvasId    : 'paycanvas',
+      numSegments : segments.length,
+      outerRadius : 150,
+      lineWidth   : 2,
+      pointerAngle: 0,
+      segments,
+      animation   : {
+        type            : 'spinToStop',
+        spins           : 5,
+        duration        : 4,
+        callbackFinished: seg => {
+          const box = ov.querySelector('.box');
+          box.insertAdjacentHTML(
+            'afterbegin',
+            `<p style="font-weight:700;font-size:1.2rem;margin-bottom:.8rem">
+               ${seg.text} 🎉
+             </p>`
+          );
+        }
+      }
   });
 
-  /* 4. fire!  -------------------------------------------------------- */
   playSpinSound();
   wheel.startAnimation();
 }
+
 
 function randPastel(){
   return `hsl(${Math.random()*360},70%,85%)`;
