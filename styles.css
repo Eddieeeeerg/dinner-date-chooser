@@ -470,3 +470,7 @@ h2 {
   z-index: 11000;
 }
 
+/* show segment labels for the pay‑wheel */
+#paycanvas + .winwheelLabel {
+  font-weight: 700;
+}
