@@ -398,7 +398,7 @@ function randomOptionals(){
    ╚══════════════════════════════════════════════════════════════════════╝ */
 function buildPayWheel(segmentArr){
   /* 1. build the overlay skeleton ----------------------------------- */
-  const root   = $('overlay-root');
+  const root   = document.body;         // always top of the document
   root.innerHTML = `
       <div id="pay-overlay">
        <div class="box">
@@ -421,7 +421,21 @@ root.querySelector('.box').insertAdjacentHTML(
 
   /* 2. Map the segment array → Winwheel segments -------------------- */
   // --- SEGMENTS ----------------------------------------------------------
-const pastel = () => `hsl(${Math.random()*360},70%,85%)`;
+/* --- pretty pastel colour for every slice (Winwheel needs a HEX) --- */
+function pastel () {
+  const h = Math.floor(Math.random()*360);      // 0‑359
+  const s = 70;                                 // %
+  const l = 85;                                 // %
+  // little HSL‑to‑HEX helper
+  const f = n => {
+    const k = (n + h/30) % 12;
+    const a = s/100 * Math.min(l/100, 1 - l/100);
+    const c = l/100 - a * Math.max(Math.min(k-3, 9-k, 1),‑1);
+    return Math.round(255 * c).toString(16).padStart(2,'0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;              // R  G  B
+}
+
 const segs    = [{}];                   // Winwheel is 1-based
 
 // convert weight → slice-size in ‰   (Winwheel slice “size” is 0–1)
