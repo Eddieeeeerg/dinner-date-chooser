@@ -474,3 +474,8 @@ h2 {
 #paycanvas + .winwheelLabel {
   font-weight: 700;
 }
+
+/* pay‑wheel must float on top of everything */
+#pay-overlay            { z-index: 11000; }
+#pay-overlay .box       { position: relative; }   /* so the arrow stays */
+
