@@ -342,6 +342,96 @@ function playSpinSound(){
   snd.currentTime = 0;
   snd.play().catch(()=>{});          // ignore autoplay blocking on some mobiles
 }
+/* === BILL-SPLIT WHEEL ============================================= */
+const PAY_MANDATORY = [
+  {label:'50 / 50 split', weight:35},
+  {label:'Eddie pays 💸',   weight:35},
+  {label:'Ellie pays 😬',    weight: 5}
+];
+const PAY_OPTIONAL = [
+  '🥰 Eddie pays + long kiss',
+  '🤗 Eddie pays, you owe 1 big hug',
+  '💌 Ellie too cute – no pay',
+  '🧃 Te quiero… y pago yo!',
+  '💖 사랑하니까 내가 낼게!',
+  '🧾 You pay café, Eddie pays dinner',
+  '😘 You pay + get a kiss',
+  '🙈 Eddie pays… how?!',
+  '🐣 Ellie too adorable – Eddie pays again',
+  '💋 Kiss-powered payment',
+  '✂️ Half & half drama',
+  '🤝 Equality day',
+  '🧮 50 / 50 then 100 % dessert',
+  '🐹 Split – Ellie ₩1 more',
+  '📉 Financial crisis – split',
+  '🎲 Split, Ellie chooses math'
+];
+
+/* pick 1-3 random optionals */
+function randomOptionals(){
+  return shuffle(PAY_OPTIONAL)
+    .slice(0, 1 + Math.floor(Math.random()*3))
+    .map(t => ({
+      label:  t,
+      weight: (100 - PAY_MANDATORY.reduce((a,b)=>a+b.weight,0)) / 3
+    }));
+}
+function buildPayWheel(segmentArr){
+  const wheelEl = document.createElement('canvas');
+  wheelEl.id = 'paywheel'; wheelEl.width = 320; wheelEl.height = 320;
+
+  const wrap = $('wheel-wrap');
+  wrap.hidden = false;
+  wrap.innerHTML = ''; wrap.appendChild(wheelEl);
+
+  // segments -> Winwheel format
+  const segments = segmentArr.map(s => ({ text: s.label, fillStyle: randPastel() }));
+
+  const payWheel = new Winwheel({
+    canvasId:    'paywheel',
+    segments,
+    lineWidth:   2,
+    pointerAngle:0,
+    animation: {
+      type:            'spinToStop',
+      duration:        4,
+      spins:           5,
+      callbackFinished: showPayResult
+    }
+  });
+  payWheel.startAnimation();
+
+  function showPayResult(seg){
+    makeOverlay(seg.text + ' 🎉', 'Close', () => wrap.hidden = true);
+  }
+}
+function randPastel(){
+  return `hsl(${Math.random()*360},70%,85%)`;
+}
+function makeOverlay(text, btn, cb){
+  const ov = document.createElement('div');
+  ov.id = 'card-overlay';
+  ov.innerHTML = `<div class="box"><p>${text}</p><button class="btn">${btn}</button></div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('button').onclick = () => { ov.remove(); cb && cb(); };
+  
+  function maybeShowPayWheel(rest){
+  // chance based on price
+  const p = rest.avgCost;   // your restaurant objects use avgCost
+  let chance = 0.05;
+  if(p >= 30000 && p < 40000) chance = 0.10;
+  else if(p >= 40000 && p < 50000) chance = 0.40;
+  else if(p >= 50000) chance = 0.80;
+
+  if(Math.random() < chance) launchPayWheel();
+}
+
+function launchPayWheel(){
+  const segments = [...PAY_MANDATORY, ...randomOptionals()];
+  buildPayWheel(segments);
+}
+
+}
 
 // ====== SPINNING WHEEL v2 ==============================================
 function showWheel(area, level){
@@ -691,11 +781,16 @@ deck = shuffle([
   ov.innerHTML = `
     <div class="box" style="max-width:320px">
       ${makeResultCard(rest).outerHTML}
+            <button class="btn" id="pay-btn" style="margin:.6rem 0">
+        Wheel of Pay 💰
+      </button>
+
       <button class="btn close-btn" style="margin-top:1rem">Back to start</button>
     </div>`;
   document.body.appendChild(ov);
 
   ov.querySelector('.close-btn').onclick = ()=>{
+    ov.querySelector('#pay-btn').onclick = () => { launchPayWheel(); };
     ov.remove();        // remove modal
     resetAll();         // go back to the very first screen
   };
