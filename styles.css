@@ -437,6 +437,12 @@ h2 {
 
 #paywheel{box-shadow:0 0 18px rgba(255,132,215,.7);border-radius:50%;}
 #card-overlay{ z-index:9999; }     /* makes prize / pay overlays top‑most */
+
+/* Pay‑wheel must be above every other overlay */
+#pay-overlay{
+  z-index: 10000;          /* higher than #card‑overlay (9 999)             */
+}
+
 /* ==== BILL‑WHEEL OVERLAY ============================================ */
 #pay-overlay{
   position:fixed; inset:0;
