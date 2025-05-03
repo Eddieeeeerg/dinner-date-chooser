@@ -414,14 +414,22 @@ root.querySelector('.box').insertAdjacentHTML(
   root.querySelector('#pay-close').onclick = () => root.innerHTML = '';
 
   /* 2. Map the segment array → Winwheel segments -------------------- */
-  const segs = [{}];                                                // Winwheel is 1‑based
-  segmentArr.forEach(s => segs.push({
-    text        : s.label,
-    fillStyle   : randPastel(),
-    textFontSize: 14,
-    textAlignment:'outer',
-    textOrientation:'horizontal'
-  }));
+  // --- SEGMENTS ----------------------------------------------------------
+const pastel = () => `hsl(${Math.random()*360},70%,85%)`;
+const segs    = [{}];                   // Winwheel is 1-based
+
+// convert weight → slice-size in ‰   (Winwheel slice “size” is 0–1)
+const totalWeight = segmentArr.reduce((a,b)=>a+b.weight,0);
+
+segmentArr.forEach(s => segs.push({
+  text           : s.label,
+  size           : s.weight / totalWeight,   // <── **this draws the arc**
+  fillStyle      : pastel(),
+  textFontSize   : 14,
+  textAlignment  : 'outer',
+  textOrientation: 'horizontal'
+}));
+
 
   /* 3. Create the wheel --------------------------------------------- */
   const wheel = new Winwheel({
