@@ -436,4 +436,4 @@ h2 {
 .card-flip.winner       .back       {visibility:visible;transform:rotateY(180deg);}
 
 #paywheel{box-shadow:0 0 18px rgba(255,132,215,.7);border-radius:50%;}
-
+#card-overlay{ z-index:9999; }     /* makes prize / pay overlays top‑most */
