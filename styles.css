@@ -453,4 +453,8 @@ h2 {
   border:4px solid #ff4d9b; border-radius:50%;
   box-shadow:0 0 22px rgba(255, 132, 215,.8);
 }
+/* …existing wheel‑overlay css… */
+#paycanvas{         /* <‑‑ add this line */
+    background:#fff;        /* forces a white wheel face            */
+}
 
