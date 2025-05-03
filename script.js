@@ -428,15 +428,30 @@ function buildPayWheel(segmentArr){
 
   /* ---------- Winwheel segments ---------- */
   const totalW   = segmentArr.reduce((a,b)=>a + b.weight,0);
-  const segments = segmentArr.map(seg => ({
-      text            : seg.label,
-      size            : 360 * seg.weight / totalW,     // degrees
-      fillStyle       : pickColor(),
-      textFontSize    : 15,
-      textAlignment   : 'outer',
-      textOrientation : 'horizontal',
-      textFillStyle   : '#333'
-  }));
+  const segments = segmentArr.map(seg => {
+  /* ▼ split the label at the *first* space that gives    */
+  /*   two lines of ≤10 characters each (fallback: as‑is) */
+  const words = seg.label.split(' ');
+  let line1 = seg.label, line2 = '';
+  for (let i = 1; i < words.length; i++){
+      const a = words.slice(0,i).join(' ');
+      const b = words.slice(i).join(' ');
+      if (a.length <= 10 && b.length <= 10){ line1=a; line2=b; break; }
+  }
+
+  /* font size: 14 px for 2‑line labels, otherwise 16 px  */
+  const fontSize = line2 ? 14 : 16;
+
+  return {
+    text            : line1 + (line2 ? '\n' + line2 : ''),
+    size            : 360 * seg.weight / totalW,
+    fillStyle       : pickColor(),
+    textFontSize    : fontSize,
+    textAlignment   : 'outer',
+    textOrientation : 'horizontal',
+    textFillStyle   : '#333'
+  };
+});
 
   /* ---------- create & spin ---------- */
   const wheel = new Winwheel({
