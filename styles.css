@@ -465,4 +465,8 @@ h2 {
   background: #fff;
 }
 
+/* Pay-wheel must always float on top of card-overlay */
+#pay-overlay {
+  z-index: 11000;
+}
 
