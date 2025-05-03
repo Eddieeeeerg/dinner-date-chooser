@@ -415,7 +415,8 @@ function makeOverlay(text, btn, cb){
   document.body.appendChild(ov);
   ov.querySelector('button').onclick = () => { ov.remove(); cb && cb(); };
   
-  function maybeShowPayWheel(rest){
+}
+function maybeShowPayWheel(rest){
   // chance based on price
   const p = rest.avgCost;   // your restaurant objects use avgCost
   let chance = 0.05;
@@ -430,9 +431,6 @@ function launchPayWheel(){
   const segments = [...PAY_MANDATORY, ...randomOptionals()];
   buildPayWheel(segments);
 }
-
-}
-
 // ====== SPINNING WHEEL v2 ==============================================
 function showWheel(area, level){
   const title = $('picker-title');
@@ -789,10 +787,11 @@ deck = shuffle([
     </div>`;
   document.body.appendChild(ov);
 
-  ov.querySelector('.close-btn').onclick = ()=>{
-    ov.querySelector('#pay-btn').onclick = () => { launchPayWheel(); };
-    ov.remove();        // remove modal
-    resetAll();         // go back to the very first screen
+    // wire Pay button immediately
+  ov.querySelector('#pay-btn').onclick = () => launchPayWheel();
+    ov.querySelector('.close-btn').onclick = () => {
+     ov.remove(); 
+    resetAll(); 
   };
 }
 
