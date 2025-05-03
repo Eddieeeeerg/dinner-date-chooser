@@ -401,9 +401,15 @@ function buildPayWheel(segmentArr){
   const root   = $('overlay-root');
   root.innerHTML = `
       <div id="pay-overlay">
-        <div class="box">
-          <canvas id="paycanvas" width="320" height="320"></canvas>
-          <button id="pay-close" class="btn">Close</button>
+       <div class="box">
+          <div style="font-size:2rem;
+           position:absolute;
+            top:-28px;
+            left:50%;
+            transform:translateX(-50%);
+            color:#ff2e75;">▼</div>
+            <canvas id="paycanvas" width="320" height="320"></canvas>
+            <button id="pay-close" class="btn">Close</button>
         </div>
       </div>`;
 root.querySelector('.box').insertAdjacentHTML(
@@ -423,7 +429,7 @@ const totalWeight = segmentArr.reduce((a,b)=>a+b.weight,0);
 
 segmentArr.forEach(s => segs.push({
   text           : s.label,
-  size           : s.weight / totalWeight,   // <── **this draws the arc**
+  size           : 360 * s.weight / totalWeight,   // Winwheel expects degrees
   fillStyle      : pastel(),
   textFontSize   : 14,
   textAlignment  : 'outer',
@@ -860,7 +866,10 @@ deck = shuffle([
   document.body.appendChild(ov);
 
     // wire Pay button immediately
-  ov.querySelector('#pay-btn').onclick = () => launchPayWheel();
+  ov.querySelector('#pay-btn').onclick = () => {
+    ov.style.zIndex = 9000;    // push the card modal down one level
+    launchPayWheel();
+    };
     ov.querySelector('.close-btn').onclick = () => {
      ov.remove(); 
     resetAll(); 
