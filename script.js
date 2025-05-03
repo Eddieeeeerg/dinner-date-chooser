@@ -673,14 +673,21 @@ deck = shuffle([
     };
   }
   function showRestaurantOverlay(rest){
-  const ov=document.createElement('div');
-  ov.id='card-overlay';
+  const ov = document.createElement('div');
+  ov.id = 'card-overlay';
   ov.innerHTML = `
     <div class="box" style="max-width:320px">
       ${makeResultCard(rest).outerHTML}
+      <button class="btn close-btn" style="margin-top:1rem">Back to start</button>
     </div>`;
   document.body.appendChild(ov);
+
+  ov.querySelector('.close-btn').onclick = ()=>{
+    ov.remove();        // remove modal
+    resetAll();         // go back to the very first screen
+  };
 }
+
 
 }
 
