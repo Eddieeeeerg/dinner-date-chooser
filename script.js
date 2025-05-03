@@ -165,6 +165,7 @@ $('picker-content').innerHTML = '';
   container.innerHTML = '';                           // wipe others
 
   container.appendChild( makeResultCard(winner) );    // single card
+  addPayButton(container, winner);
   /* clear any list that might have been shown previously */
   $('picker-content').innerHTML = '';
 
@@ -183,7 +184,17 @@ function showList(area, level){
   $('picker-title').textContent = 'All Options:';
   const out = $('picker-content');
   out.innerHTML = '';
-  list.forEach(r => out.appendChild(makeResultCard(r)));
+  list.forEach(r => {
+  // when the user clicks a card, show its details + pay button
+  const cardElm = makeResultCard(r);
+  cardElm.onclick = () => {
+    out.innerHTML = '';
+    out.appendChild(cardElm);
+    addPayButton(out, r);
+  };
+  out.appendChild(cardElm);
+});
+
 }
 
 function pickerEmpty(){
@@ -395,7 +406,10 @@ function buildPayWheel(segmentArr){
           <button id="pay-close" class="btn">Close</button>
         </div>
       </div>`;
-
+root.querySelector('.box').insertAdjacentHTML(
+  'afterbegin',
+  '<div style="font-size:2rem;position:absolute;top:-28px;left:50%;transform:translateX(-50%);color:#ff2e75;">▼</div>'
+  );
   /* remove on close -------------------------------------------------- */
   root.querySelector('#pay-close').onclick = () => root.innerHTML = '';
 
@@ -461,6 +475,19 @@ function launchPayWheel(){
   const segments = [...PAY_MANDATORY, ...randomOptionals()];
   buildPayWheel(segments);
 }
+// ─── helper: add Wheel of Pay button to any result screen ───────────
+function addPayButton(where, rest){
+  const btn = document.createElement('button');
+  btn.className = 'spin-btn';
+  btn.style.marginTop = '.6rem';
+  btn.textContent = 'Wheel of Pay 💰';
+  btn.onclick = () => launchPayWheel();
+  where.appendChild(btn);
+
+  // still honour the automatic chance
+  maybeShowPayWheel(rest);
+}
+
 // ====== SPINNING WHEEL v2 ==============================================
 function showWheel(area, level){
   const title = $('picker-title');
@@ -563,6 +590,7 @@ while(list.length < 6)
   if(!pick.type){                    // a real restaurant
     resultDiv.innerHTML = '';
     resultDiv.appendChild(makeResultCard(pick));
+    addPayButton(resultDiv, pick);
     spinsLeft--;                     // always costs a spin
     maybeShowPayWheel(pick);
   } else {                           // one of the fun slices
@@ -578,6 +606,8 @@ while(list.length < 6)
   title.textContent = `Spins left: ${spinsLeft}`;
   spinBtn.disabled  = spinsLeft === 0;
 }
+     
+
 
     }
   });
@@ -807,7 +837,6 @@ deck = shuffle([
   }
   function showRestaurantOverlay(rest){
   const ov = document.createElement('div');
-    maybeShowPayWheel(rest);
   ov.id = 'card-overlay';
   ov.innerHTML = `
     <div class="box" style="max-width:320px">
@@ -826,6 +855,7 @@ deck = shuffle([
      ov.remove(); 
     resetAll(); 
   };
+    maybeShowPayWheel(rest);
 }
 
 
@@ -887,11 +917,15 @@ function resetAll() {
 $('method-section').hidden = true;
 $('wheel-wrap').hidden = true;          
 $('wheel-wrap').innerHTML = '<div id="wheel-pointer">▼</div><canvas id="wheelcanvas" width="380" height="380"></canvas>';    
-
+  $('overlay-root').innerHTML = '';     
+  const co = document.getElementById('card-overlay'); 
+  if (co) co.remove();                 
 }
 
 $('back-btn').onclick = () => {
   $('picker-section').hidden = true;
   $('method-section').hidden  = false;
+  $('wheel-wrap').hidden      = true;   // hide wheel before leaving
 };
+
 
