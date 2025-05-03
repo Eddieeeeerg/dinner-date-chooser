@@ -460,7 +460,9 @@ h2 {
   box-shadow:0 0 22px rgba(255, 132, 215,.8);
 }
 /* …existing wheel‑overlay css… */
-#paycanvas{         /* <‑‑ add this line */
-    background:#fff;        /* forces a white wheel face            */
+/* ensure the pay-wheel face is white */
+#paycanvas {
+  background: #fff;
 }
+
 
