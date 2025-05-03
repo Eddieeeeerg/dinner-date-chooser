@@ -653,7 +653,7 @@ deck = shuffle([
      setTimeout(()=> {
         document.querySelectorAll('.card-flip:not(.flipped)')
                 .forEach(c=>c.classList.add('flipped'));
-      }, 30000);
+      }, 5000);
     };
   });
 
