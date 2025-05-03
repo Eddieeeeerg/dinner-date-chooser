@@ -150,9 +150,10 @@ function makeResultCard(r){
 
 /* -------------------------------------------------- RANDOM PICK ---- */
 function showRandom(area, level){
-  // make sure the wheel is gone
+  // make sure every visual left‑over is gone
   $('wheel-wrap').hidden = true;
   $('wheelcanvas').style.display = 'none';
+$('picker-content').innerHTML = '';
 
   const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
@@ -164,6 +165,8 @@ function showRandom(area, level){
   container.innerHTML = '';                           // wipe others
 
   container.appendChild( makeResultCard(winner) );    // single card
+  /* clear any list that might have been shown previously */
+  $('picker-content').innerHTML = '';
 
   /*  🔸 fire the 5 % bill wheel logic right here  */
   maybeShowPayWheel(winner);
@@ -369,13 +372,16 @@ const PAY_OPTIONAL = [
 
 /* pick 1-3 random optionals */
 function randomOptionals(){
-  return shuffle(PAY_OPTIONAL)
-    .slice(0, 1 + Math.floor(Math.random()*3))
-    .map(t => ({
-      label:  t,
-      weight: (100 - PAY_MANDATORY.reduce((a,b)=>a+b.weight,0)) / 3
-    }));
+  const pick = shuffle(PAY_OPTIONAL).slice(         // 1–3 random texts
+                 0, 1+Math.floor(Math.random()*3));
+
+  const left  = 100 - PAY_MANDATORY
+                          .reduce((a,b)=>a+b.weight,0);
+  const share = Math.floor(left / pick.length);     // even slice
+
+  return pick.map(t => ({ label:t, weight:share }));
 }
+
 function buildPayWheel(segmentArr){
   const wheelEl = document.createElement('canvas');
   wheelEl.id = 'paywheel'; wheelEl.width = 320; wheelEl.height = 320;
@@ -384,8 +390,9 @@ function buildPayWheel(segmentArr){
   wrap.hidden = false;
   wrap.innerHTML = ''; wrap.appendChild(wheelEl);
 
-  // segments -> Winwheel format
-  const segments = segmentArr.map(s => ({ text: s.label, fillStyle: randPastel() }));
+  /* Winwheel is 1‑based → prepend a dummy object */
+  const segments = [{}];
+  segmentArr.forEach(s => segments.push({ text:s.label, fillStyle:randPastel() }));
 
   const payWheel = new Winwheel({
     canvasId:    'paywheel',
@@ -436,6 +443,7 @@ function showWheel(area, level){
   const title = $('picker-title');
   const box   = $('picker-container');
   box.innerHTML = '';                     // clear cards
+  $('picker-content').innerHTML = '';
   $('wheel-wrap').hidden = false;         // show wrapper
   $('wheelcanvas').style.display='none';  // hide until dice rolled
 
@@ -533,6 +541,7 @@ while(list.length < 6)
     resultDiv.innerHTML = '';
     resultDiv.appendChild(makeResultCard(pick));
     spinsLeft--;                     // always costs a spin
+    maybeShowPayWheel(pick);
   } else {                           // one of the fun slices
     if(pick.type === 'bonus'){       // always +1
       spinsLeft++;
@@ -775,6 +784,7 @@ deck = shuffle([
   }
   function showRestaurantOverlay(rest){
   const ov = document.createElement('div');
+    maybeShowPayWheel(rest);
   ov.id = 'card-overlay';
   ov.innerHTML = `
     <div class="box" style="max-width:320px">
