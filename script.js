@@ -480,6 +480,8 @@ function maybeShowPayWheel(rest){
 }
 
 function launchPayWheel(){
+  // remove any old pay-overlay before building a new one
+  document.getElementById('pay-overlay')?.remove();
   const segments = [...PAY_MANDATORY, ...randomOptionals()];
   buildPayWheel(segments);
 }
@@ -883,6 +885,9 @@ function showDetails(r) {
          : ''}
     </div>
   `;
+    const details = container.querySelector('.details');
+  addPayButton(details, r);
+
 }
 
 // ====== HELPER: getFilteredList ======
@@ -896,15 +901,18 @@ function getFilteredList(area, level) {
 
 // ====== Existing LIST fallback ======
 function showList(area, level) {
-  $('picker-title').textContent = 'All Options:';
+  $('wheel-wrap').hidden         = true;
+  $('wheelcanvas').style.display = 'none';
+  $('picker-title').textContent  = 'All Options:';
   const container = $('picker-container');
   container.innerHTML = '';
-  let list = area === 'ANY'
-? Object.values(restaurantData).flat()
-: (restaurantData[area] || []).slice();
-list = list.filter(r => r.avgCost <= budgetLimit);
-  if (level === 'Healthy') list = list.filter(r => r.avgCost <= 30000);
-  else if (level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
+  let list = area==='ANY'
+    ? Object.values(restaurantData).flat()
+    : (restaurantData[area] || []).slice();
+  list = list.filter(r => r.avgCost <= budgetLimit);
+  if(level === 'Healthy')      list = list.filter(r => r.avgCost <= 30000);
+  else if(level === 'Less Healthy') list = list.filter(r => r.avgCost > 30000);
+
   list.forEach(r => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -912,13 +920,22 @@ list = list.filter(r => r.avgCost <= budgetLimit);
       <img src="${r.img}" alt="${r.name}" />
       <p>${r.name}</p>
     `;
-    card.onclick = () => showDetails(r);
+    card.onclick = () => {
+      container.innerHTML = '';
+      // show the result card
+      container.appendChild(makeResultCard(r));
+      // …and add the pay-wheel button
+      addPayButton(container, r);
+    };
     container.appendChild(card);
   });
 }
 
+
 // ====== RESET ======
 function resetAll() {
+  // if a pay-wheel overlay is showing, remove it
+  document.getElementById('pay-overlay')?.remove();
   $('picker-section').hidden   = true;
   $('category-section').hidden = true;
   $('area-section').hidden     = false;
