@@ -530,6 +530,9 @@ h2 {
   transition:transform .9s ease-out, top .9s ease-out, opacity .4s;
 }
 
+.drop-in { top: 40%; opacity: 1; }
+
+
 /* big heart engulfs screen then fades */
 .grow-cover { transform: scale(22); }
 .fade-away  { opacity: 0; }
