@@ -490,49 +490,55 @@ h2 {
   z-index: 5;
 }
 
-/* === INTRO SPLASH TUNE‑UP ==================================== */
+/* === INTRO / LOGIN ================================================= */
 #intro-overlay,
 #login-overlay{
-  position:fixed; inset:0;
-  background:#ffeef8;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  z-index:12000;
+  position:fixed; inset:0; z-index:9000;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; background:#ffeef8;
 }
 
-/* ---- HEART ---- */
-.big-heart{
-  font-size:10rem;                   /* bigger base size */
-  animation:heartBoom 2.6s forwards;
+/* big heart covers screen then pops */
+#bigHeart{
+  font-size:12rem;
+  animation:boom 2.3s forwards;
 }
-@keyframes heartBoom{
-  0%   {transform:scale(.25);}
-  60%  {transform:scale(14);}        /* totally covers viewport */
+@keyframes boom{
+  0%   {transform:scale(.2);}
+  55%  {transform:scale(16);}
   100% {transform:scale(0); opacity:0;}
 }
 
-/* ---- FLOATING SPLINTER HEARTS ---- */
-.heart-splinter{
-  position:fixed; font-size:2rem;
-  animation:floatAway 3.5s ease-out forwards;
-  pointer-events:none; z-index:12001;
+/* tiny hearts */
+.mini{
+  position:fixed; font-size:2rem; z-index:9100; pointer-events:none;
+  animation:fly 3.2s ease-out forwards;
 }
-@keyframes floatAway{
-  0%{transform:translateY(0) scale(1); opacity:1;}
-  100%{transform:translateY(-100vh) scale(1.6); opacity:0;}
-}
-
-/* ---- VIDEO ---- */
-#intro-video{
-  width:260px; max-width:80vw;
-  border-radius:14px;
-  box-shadow:0 8px 26px rgba(0,0,0,.3);
-  opacity:0;                         /* reveal after boom */
-  transition:opacity .6s;
+@keyframes fly{
+  to{
+    transform:translate(var(--dx), var(--dy)) scale(1.5) rotate(1turn);
+    opacity:0;
+  }
 }
 
-.fade-out{animation:fadeOut .9s forwards;}
+/* video appears only after boom */
+#introVid{
+  width:260px; max-width:80vw; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,.25);
+  opacity:0; transition:opacity .6s;
+}
+
+/* fade any overlay */
+.fade{animation:fadeOut .9s forwards;}
 @keyframes fadeOut{to{opacity:0; visibility:hidden;}}
 
-/* ---- LOGIN BOX (unchanged) ---- */
+/* login box */
+.login-box{
+  background:#fff0f6; border:2px solid #fcb1cc; border-radius:12px;
+  padding:2rem 2.6rem; text-align:center;
+}
+.login-box h2{color:#d6336c; margin-bottom:1rem;}
+#loginPw{margin-left:.4rem; padding:.3rem .5rem; border-radius:6px; border:1px solid #ccc;}
+#loginBtn{margin-top:.9rem; padding:.5rem 1.3rem; border:none; border-radius:8px;
+          background:#d6336c; color:#fff; cursor:pointer;}
+#loginBtn:hover{background:#a61e4d;}
 
