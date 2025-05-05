@@ -7,35 +7,35 @@
   const wrap  = $('#vid-wrap');
   const heart = $('#megaHeart');
 
-  /* 1 – wait until metadata → schedule the drop 0.5 s before the end */
+  /* 1 – once metadata is ready, schedule the drop 4.5 s in */
   video.addEventListener('loadedmetadata', () => {
-    const dropAt = Math.max(0, (video.duration - 0.5) * 1000);   // ms
-    setTimeout(dropSequence, dropAt);
+    video.play().catch(()=>{});                 // make sure it autoplays
+    setTimeout(dropSequence, 4500);             // 4.5 s mark
   });
 
-  /* 2 – heart drops, pushes video, then grows & fades */
+  /* 2 – heart drops, pushes video, then grows & fades */
   function dropSequence(){
-    wrap.classList.add('push-spin');   // spin + fall
-    heart.classList.add('drop-in');    // appears mid‑screen
+    wrap.classList.add('push-spin');            // spin + fall video
+    heart.classList.add('drop-in');             // heart slides to centre
 
-    /* fling the 4 corner hearts away */
+    // fling the 4 corner hearts away
     document.querySelectorAll('.border-heart')
             .forEach(h => h.classList.add('spread-away'));
 
-    /* after 3 s pause, heart grows & fades */
+    /* after 3 s pause, engulf and fade */
     setTimeout(()=>{
       heart.classList.add('grow-cover');
-      setTimeout(()=>heart.classList.add('fade-away'), 1200);
+      setTimeout(()=>heart.classList.add('fade-away'), 1400);
     }, 3000);
   }
 
-  /* 3 – when the clip ends, fade intro → show login */
-  video.addEventListener('ended', ()=>{
+  /* 3 – clip ended → black fades to login */
+  video.addEventListener('ended', () => {
     intro.classList.add('fade');
-    setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
+    setTimeout(()=>{ intro.remove(); login.hidden = false; }, 900);
   });
 
-  /* ==== PASSWORD (unchanged) ==================================== */
+  /* ==== PASSWORD GATE ============================================ */
   const OK  = '010107';
   const pw  = $('#loginPw');
   const btn = $('#loginBtn');
@@ -43,16 +43,16 @@
   const unlock = () =>{
     if(pw.value.trim() === OK){
       login.classList.add('fade');
-      setTimeout(()=>{ login.remove(); launchHeartBubbles(); }, 900);
-    }else err.style.display='block';
+      setTimeout(()=>{
+        login.remove();
+        launchHeartBubbles();          // bubbles only now
+      }, 900);
+    } else err.style.display = 'block';
   };
-  btn.onclick = unlock;
-  pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
+  btn.onclick      = unlock;
+  pw.onkeydown     = e => { if(e.key === 'Enter') unlock(); };
 })();
 
-  btn.onclick = unlock;
-  pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
-})();
 console.log('🔥 script.js loaded');
 // ====== UTILITY ======
 const $ = id => document.getElementById(id);
