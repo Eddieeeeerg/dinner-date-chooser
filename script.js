@@ -77,6 +77,43 @@ refreshAreaAvailability();
 initMethodChooser();
   $('reset-btn').addEventListener('click', resetAll);
 });
+/* ===  SPLASH + LOGIN FLOW  ==================================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const intro   = document.getElementById('intro-overlay');
+  const login   = document.getElementById('login-overlay');
+  const site    = document.getElementById('site-content');
+  const video   = document.getElementById('intro-video');
+  const passInp = document.getElementById('login-pass');
+  const btn     = document.getElementById('login-btn');
+  const errTxt  = document.getElementById('login-error');
+  const OKPW    = '010107';
+
+  /* 1. when the 5‑s clip finishes → fade splash, show login */
+  video.addEventListener('ended', ()=>{
+    intro.classList.add('fade-out');
+    setTimeout(()=>{            // wait for fade animation to finish
+      intro.style.display='none';
+      login.hidden = false;
+      passInp.focus();
+    }, 900);
+  });
+
+  /* 2. unlock on button click or [Enter] */
+  const tryUnlock = ()=>{
+    if(passInp.value.trim() === OKPW){
+      login.classList.add('fade-out');
+      setTimeout(()=>{
+        login.style.display='none';
+        site.hidden = false;            // reveal the real website
+      }, 900);
+    } else {
+      errTxt.style.display='block';
+    }
+  };
+  btn.addEventListener('click', tryUnlock);
+  passInp.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+});
+
 /***** BUDGET SLIDER *****/
 function initBudgetSlider(){
   const slider  = $('budget-slider');
