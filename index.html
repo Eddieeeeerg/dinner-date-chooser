@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ellie & Eddie’s Dinner Dates 💖</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ellie & Eddie’s Dinner Dates 💖</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  
-  <!-- ✨ INTRO OVERLAY  (replace the old one) -->
-<div id="intro-overlay">
-  <!-- video sits in a wrapper so we can spin / drop it -->
-  <div id="vid-wrap">
-    <video id="introVid"
-           src="videos/intro.mp4"
-           autoplay muted playsinline></video>
 
-    <!-- small decorative hearts hugging the video -->
-    <span class="border-heart tl">💖</span>
-    <span class="border-heart tr">💘</span>
-    <span class="border-heart bl">💝</span>
-    <span class="border-heart br">❤️‍🔥</span>
+<body>
+  <!-- ─── INTRO SPLASH ─────────────────────────────────────────────── -->
+  <div id="intro-overlay">
+    <div id="vid-wrap">
+      <video id="introVid" src="videos/intro.mp4" autoplay muted playsinline></video>
+      <span class="border-heart tl">💖</span>
+      <span class="border-heart tr">💘</span>
+      <span class="border-heart bl">💝</span>
+      <span class="border-heart br">❤️‍🔥</span>
+    </div>
+    <span id="megaHeart">💖</span>
   </div>
 
-  <!-- big heart that will drop, pause, then cover the screen -->
-  <span id="megaHeart">💖</span>
-</div>
-
+  <!-- ─── PASSWORD GATE ────────────────────────────────────────────── -->
+  <div id="login-overlay" hidden>
+    <div class="login-box">
+      <h2>Are you Ellie?</h2>
+      Password:
+      <input id="loginPw" type="password" autocomplete="off" />
+      <button id="loginBtn">Enter</button>
+      <p id="loginErr" hidden>Wrong password – try again.</p>
+    </div>
+  </div>
 
     <!-- ====== Aqui se acaba el nuevo bloque de la intro ====== -->
   <header>
@@ -108,7 +111,13 @@
 <div id="overlay-root"></div>
   
 
-  
+<!-- ─── LIBS (once each) ─────────────────────────────────────────── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/gh/zarocknz/javascript-winwheel@2.8/Winwheel.min.js" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/wScratchPad@2.1.1/dist/wScratchPad.min.js" defer></script>
+
+  <!-- ─── OUR LOGIC (only once!) ───────────────────────────────────── -->
+  <script src="script.js" defer></script>
 </body>
 </html>
-
