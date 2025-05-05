@@ -542,3 +542,58 @@ h2 {
           background:#d6336c; color:#fff; cursor:pointer;}
 #loginBtn:hover{background:#a61e4d;}
 
+/* === SPLASH 2.0 =============================================== */
+#intro-overlay{
+  position:fixed; inset:0; background:#000;         /* black screen */
+  display:flex; align-items:center; justify-content:center;
+  z-index:9000; overflow:hidden;
+}
+
+/* ----- video wrapper ----- */
+#vid-wrap{
+  position:relative; width:260px; max-width:80vw;
+  transition:transform .9s ease-out;                /* spin‑drop */
+}
+#introVid{
+  width:100%; border-radius:14px;
+  box-shadow:0 8px 28px rgba(0,0,0,.6);
+}
+
+/* four tiny hearts hugging the corners */
+.border-heart{
+  position:absolute; font-size:28px; pointer-events:none;
+}
+.border-heart.tl{top:-14px; left:-14px;}
+.border-heart.tr{top:-14px; right:-14px;}
+.border-heart.bl{bottom:-14px; left:-14px;}
+.border-heart.br{bottom:-14px; right:-14px;}
+
+/* pushed‑down / spin animation */
+.push-spin{
+  transform:translateY(220%) rotate(720deg);
+}
+
+/* ----- mega heart ----- */
+#megaHeart{
+  position:absolute; top:-180px;                    /* start off‑screen */
+  font-size:10rem; opacity:0;
+  transition:transform .9s ease-out, top .9s ease-out, opacity .4s;
+}
+.drop-in      { top:40%;   opacity:1; }             /* slides to centre */
+.grow-cover   { transform:scale(20); }              /* fill the screen */
+.fade-away    { opacity:0; }                        /* final fade */
+  
+/* ----- fade utility ----- */
+.fade          { animation:fadeOut .9s forwards; }
+@keyframes fadeOut{to{opacity:0; visibility:hidden;}}
+
+/* ----- heart bubbles after login ----- */
+.heart-bubble{
+  position:fixed; bottom:-40px; font-size:32px; pointer-events:none;
+  animation:floatUp 4s ease-out forwards;
+  z-index:9999;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(1); opacity:1;}
+  100%{transform:translateY(-110vh) scale(1.4); opacity:0;}
+}
