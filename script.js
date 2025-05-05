@@ -1,48 +1,55 @@
 // script.js
-/* ⇢⇢ INTRO FLOW v2 + PASSWORD ==================================== */
+/* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
 (() => {
-  const intro   = $('#intro-overlay');
-  const login   = $('#login-overlay');
-  const video   = $('#introVid');
-  const wrap    = $('#vid-wrap');
-  const heart   = $('#megaHeart');
+  const intro = $('#intro-overlay');
+  const login = $('#login-overlay');
+  const video = $('#introVid');
+  const wrap  = $('#vid-wrap');
+  const heart = $('#megaHeart');
 
-  /* ---- when video nears the end (last 1 s) ---- */
-  video.addEventListener('timeupdate', () => {
-    if(video.currentTime >= video.duration - 1 && !wrap.classList.contains('push-spin')){
-      wrap.classList.add('push-spin');          // spin & drop video
-      heart.classList.add('drop-in');           // heart falls to centre
-
-      setTimeout(()=>{                          // wait 3 s, then engulf
-        heart.classList.add('grow-cover');
-        setTimeout(()=>{ heart.classList.add('fade-away'); }, 1200);
-      }, 3000);                                 // 3–4 s pause
-    }
+  /* 1 – wait until metadata → schedule the drop 0.5 s before the end */
+  video.addEventListener('loadedmetadata', () => {
+    const dropAt = Math.max(0, (video.duration - 0.5) * 1000);   // ms
+    setTimeout(dropSequence, dropAt);
   });
 
-  /* ---- when video really ends → reveal login ---- */
-  video.addEventListener('ended', () => {
+  /* 2 – heart drops, pushes video, then grows & fades */
+  function dropSequence(){
+    wrap.classList.add('push-spin');   // spin + fall
+    heart.classList.add('drop-in');    // appears mid‑screen
+
+    /* fling the 4 corner hearts away */
+    document.querySelectorAll('.border-heart')
+            .forEach(h => h.classList.add('spread-away'));
+
+    /* after 3 s pause, heart grows & fades */
+    setTimeout(()=>{
+      heart.classList.add('grow-cover');
+      setTimeout(()=>heart.classList.add('fade-away'), 1200);
+    }, 3000);
+  }
+
+  /* 3 – when the clip ends, fade intro → show login */
+  video.addEventListener('ended', ()=>{
     intro.classList.add('fade');
     setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
   });
 
-  /* ---- Password gate (unchanged except bubble trigger) ---- */
-  const OK   = '010107';
-  const pw   = $('#loginPw');
-  const btn  = $('#loginBtn');
-  const err  = $('#loginErr');
-
-  const unlock = () => {
+  /* ==== PASSWORD (unchanged) ==================================== */
+  const OK  = '010107';
+  const pw  = $('#loginPw');
+  const btn = $('#loginBtn');
+  const err = $('#loginErr');
+  const unlock = () =>{
     if(pw.value.trim() === OK){
       login.classList.add('fade');
-      setTimeout(()=>{
-        login.remove();
-        launchHeartBubbles();       // 🌟 bubbles NOW, not before
-      }, 900);
-    } else {
-      err.style.display='block';
-    }
+      setTimeout(()=>{ login.remove(); launchHeartBubbles(); }, 900);
+    }else err.style.display='block';
   };
+  btn.onclick = unlock;
+  pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
+})();
+
   btn.onclick = unlock;
   pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
 })();
