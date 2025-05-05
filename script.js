@@ -377,7 +377,7 @@ const PAY_OPTIONAL = [
 '✂️ Half and half — just like the drama in our relationship',
 '🤝 We both pay. Equality wins today.',
 '🧮 Let’s go 50/50, and then 100% dessert',
-'🐹 Split the bill... but Ellie pays ₩1 more because she's the adult here',
+'🐹 Split the bill... but Ellie pays ₩1 more because she\'s the adult here',
 '📉 It’s a financial crisis. We split.',
 '⚖️ Both of us pay. Justice has been served.',
 '🎲 Split the bill, but Ellie chooses how. (random math is okay)'
