@@ -479,3 +479,14 @@ h2 {
 #pay-overlay            { z-index: 11000; }
 #pay-overlay .box       { position: relative; }   /* so the arrow stays */
 
+/* ===== Bill‑wheel pointer ==================================== */
+.wheel-pointer {
+  position: absolute;
+  top: calc(50% - 180px);   /* move down until the tip touches the rim      */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;          /* the little 🎉 you’re using */
+  pointer-events: none;
+  z-index: 5;
+}
+
