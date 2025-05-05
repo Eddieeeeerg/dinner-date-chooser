@@ -8,23 +8,25 @@
 </head>
 <body>
   
-   <!-- ✨ INTRO OVERLAY -->
-  <div id="intro-overlay">
-    <span id="bigHeart">💖</span>
-    <video id="introVid" src="videos/intro.mp4" autoplay muted playsinline></video>
+  <!-- ✨ INTRO OVERLAY  (replace the old one) -->
+<div id="intro-overlay">
+  <!-- video sits in a wrapper so we can spin / drop it -->
+  <div id="vid-wrap">
+    <video id="introVid"
+           src="videos/intro.mp4"
+           autoplay muted playsinline></video>
+
+    <!-- small decorative hearts hugging the video -->
+    <span class="border-heart tl">💖</span>
+    <span class="border-heart tr">💘</span>
+    <span class="border-heart bl">💝</span>
+    <span class="border-heart br">❤️‍🔥</span>
   </div>
 
-  <!-- 🔐 LOGIN GATE -->
-  <div id="login-overlay" hidden>
-    <div class="login-box">
-      <h2>Are you Ellie?</h2>
-      <label>Password:
-        <input type="password" id="loginPw" autocomplete="off">
-      </label>
-      <button id="loginBtn">Enter</button>
-      <p id="loginErr" style="display:none;">Wrong password – try again.</p>
-    </div>
-  </div>
+  <!-- big heart that will drop, pause, then cover the screen -->
+  <span id="megaHeart">💖</span>
+</div>
+
 
     <!-- ====== Aqui se acaba el nuevo bloque de la intro ====== -->
   <header>
