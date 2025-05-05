@@ -406,7 +406,7 @@ function buildPayWheel(segmentArr){
      <div class="box">
        <div style="font-size:2rem;
                    position:absolute;
-                   top:-28px;
+                   top:-10px;
                    left:50%;
                    transform:translateX(-50%);
                    color:#ff2e75;">▼</div>
