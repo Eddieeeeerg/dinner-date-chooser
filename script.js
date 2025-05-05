@@ -1,4 +1,51 @@
 // script.js
+/* ⇢⇢ INTRO FLOW v2 + PASSWORD ==================================== */
+(() => {
+  const intro   = $('#intro-overlay');
+  const login   = $('#login-overlay');
+  const video   = $('#introVid');
+  const wrap    = $('#vid-wrap');
+  const heart   = $('#megaHeart');
+
+  /* ---- when video nears the end (last 1 s) ---- */
+  video.addEventListener('timeupdate', () => {
+    if(video.currentTime >= video.duration - 1 && !wrap.classList.contains('push-spin')){
+      wrap.classList.add('push-spin');          // spin & drop video
+      heart.classList.add('drop-in');           // heart falls to centre
+
+      setTimeout(()=>{                          // wait 3 s, then engulf
+        heart.classList.add('grow-cover');
+        setTimeout(()=>{ heart.classList.add('fade-away'); }, 1200);
+      }, 3000);                                 // 3–4 s pause
+    }
+  });
+
+  /* ---- when video really ends → reveal login ---- */
+  video.addEventListener('ended', () => {
+    intro.classList.add('fade');
+    setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
+  });
+
+  /* ---- Password gate (unchanged except bubble trigger) ---- */
+  const OK   = '010107';
+  const pw   = $('#loginPw');
+  const btn  = $('#loginBtn');
+  const err  = $('#loginErr');
+
+  const unlock = () => {
+    if(pw.value.trim() === OK){
+      login.classList.add('fade');
+      setTimeout(()=>{
+        login.remove();
+        launchHeartBubbles();       // 🌟 bubbles NOW, not before
+      }, 900);
+    } else {
+      err.style.display='block';
+    }
+  };
+  btn.onclick = unlock;
+  pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
+})();
 console.log('🔥 script.js loaded');
 // ====== UTILITY ======
 const $ = id => document.getElementById(id);
@@ -77,53 +124,7 @@ refreshAreaAvailability();
 initMethodChooser();
   $('reset-btn').addEventListener('click', resetAll);
 });
-/* ⇢⇢ INTRO FLOW v2 + PASSWORD ==================================== */
-(() => {
-  const intro   = $('#intro-overlay');
-  const login   = $('#login-overlay');
-  const video   = $('#introVid');
-  const wrap    = $('#vid-wrap');
-  const heart   = $('#megaHeart');
 
-  /* ---- when video nears the end (last 1 s) ---- */
-  video.addEventListener('timeupdate', () => {
-    if(video.currentTime >= video.duration - 1 && !wrap.classList.contains('push-spin')){
-      wrap.classList.add('push-spin');          // spin & drop video
-      heart.classList.add('drop-in');           // heart falls to centre
-
-      setTimeout(()=>{                          // wait 3 s, then engulf
-        heart.classList.add('grow-cover');
-        setTimeout(()=>{ heart.classList.add('fade-away'); }, 1200);
-      }, 3000);                                 // 3–4 s pause
-    }
-  });
-
-  /* ---- when video really ends → reveal login ---- */
-  video.addEventListener('ended', () => {
-    intro.classList.add('fade');
-    setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
-  });
-
-  /* ---- Password gate (unchanged except bubble trigger) ---- */
-  const OK   = '010107';
-  const pw   = $('#loginPw');
-  const btn  = $('#loginBtn');
-  const err  = $('#loginErr');
-
-  const unlock = () => {
-    if(pw.value.trim() === OK){
-      login.classList.add('fade');
-      setTimeout(()=>{
-        login.remove();
-        launchHeartBubbles();       // 🌟 bubbles NOW, not before
-      }, 900);
-    } else {
-      err.style.display='block';
-    }
-  };
-  btn.onclick = unlock;
-  pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
-})();
 
 
 
