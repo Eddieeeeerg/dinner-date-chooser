@@ -1,4 +1,5 @@
 // script.js
+const $ = id => document.getElementById(id);
 /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
 (() => {
   const intro = $('#intro-overlay');
@@ -55,7 +56,6 @@
 
 console.log('🔥 script.js loaded');
 // ====== UTILITY ======
-const $ = id => document.getElementById(id);
 let budgetLimit = 101000;   // start = no limit (101 k)
 let currentArea  = null;   // ← track the user’s picks
 let currentLevel = null;
