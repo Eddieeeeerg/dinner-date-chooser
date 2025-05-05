@@ -77,57 +77,54 @@ refreshAreaAvailability();
 initMethodChooser();
   $('reset-btn').addEventListener('click', resetAll);
 });
-/*  Intro + Password gate  (stand‑alone, does NOT touch picker code) */
+/* ⇢⇢ INTRO FLOW v2 + PASSWORD ==================================== */
 (() => {
-  const intro   = document.getElementById('intro-overlay');
-  const login   = document.getElementById('login-overlay');
-  const bigH    = document.getElementById('bigHeart');
-  const vid     = document.getElementById('introVid');
+  const intro   = $('#intro-overlay');
+  const login   = $('#login-overlay');
+  const video   = $('#introVid');
+  const wrap    = $('#vid-wrap');
+  const heart   = $('#megaHeart');
 
-  const miniEmojis = ['💖','💘','💝','❤️‍🔥'];
+  /* ---- when video nears the end (last 1 s) ---- */
+  video.addEventListener('timeupdate', () => {
+    if(video.currentTime >= video.duration - 1 && !wrap.classList.contains('push-spin')){
+      wrap.classList.add('push-spin');          // spin & drop video
+      heart.classList.add('drop-in');           // heart falls to centre
 
-  // pop ♥️ fragments once the boom ends
-  bigH.addEventListener('animationend', () => {
-    for(let i=0;i<24;i++){
-      const s = document.createElement('span');
-      s.className = 'mini';
-      s.textContent = miniEmojis[Math.floor(Math.random()*miniEmojis.length)];
-      const a = (Math.random()*360)|0, r = Math.random()*120+80;
-      s.style.left = '50%'; s.style.top='50%';
-      s.style.setProperty('--dx', `${Math.cos(a*Math.PI/180)*r}px`);
-      s.style.setProperty('--dy', `${Math.sin(a*Math.PI/180)*-r}px`);
-      document.body.appendChild(s);
-      setTimeout(()=>s.remove(), 3200);
+      setTimeout(()=>{                          // wait 3 s, then engulf
+        heart.classList.add('grow-cover');
+        setTimeout(()=>{ heart.classList.add('fade-away'); }, 1200);
+      }, 3000);                                 // 3–4 s pause
     }
-    vid.style.opacity = 1;
-    vid.play().catch(()=>{ setTimeout(showLogin, 5500); });
   });
 
-  vid.addEventListener('ended', showLogin);
-  vid.addEventListener('error', () => setTimeout(showLogin, 4500));
-
-  function showLogin(){
-    if(intro.classList.contains('fade')) return;
+  /* ---- when video really ends → reveal login ---- */
+  video.addEventListener('ended', () => {
     intro.classList.add('fade');
     setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
-  }
+  });
 
-  /* ========== Password gate ========== */
-  const OK = '010107';
-  const pw  = document.getElementById('loginPw');
-  const btn = document.getElementById('loginBtn');
-  const err = document.getElementById('loginErr');
+  /* ---- Password gate (unchanged except bubble trigger) ---- */
+  const OK   = '010107';
+  const pw   = $('#loginPw');
+  const btn  = $('#loginBtn');
+  const err  = $('#loginErr');
+
   const unlock = () => {
     if(pw.value.trim() === OK){
       login.classList.add('fade');
-      setTimeout(()=>login.remove(), 900);
-    }else{
+      setTimeout(()=>{
+        login.remove();
+        launchHeartBubbles();       // 🌟 bubbles NOW, not before
+      }, 900);
+    } else {
       err.style.display='block';
     }
   };
   btn.onclick = unlock;
   pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
 })();
+
 
 
 
