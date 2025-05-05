@@ -301,7 +301,7 @@ function launchHeartBubbles() {
 }
 
 // fire once when everything is ready
-window.addEventListener("load", launchHeartBubbles);
+//window.addEventListener("load", launchHeartBubbles);
 
 
 // ====== PHASE 1: Render Area Cards ======
