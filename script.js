@@ -29,7 +29,7 @@ const restaurantData = {
   ],
   "Jamsil": [
     { name: "On The Border",               category: "mexican",  avgCost: 55000, weight: 1, url: "https://naver.me/FRLFrjsS", img: "images/border-jamsil.jpg",    open: "10:30", close: "22:00" },
-    { name: "Brooklyn The Burger Joint",   category: "fastFood", avgCost: 25000, weight: 2, url: "https://naver.me/5tJuhyqx", img: "images/brooklyn-jamsil.jpg",  open: "10:30", close: "21:00" },
+    { name: "Brooklyn The Burger Joint",   category: "fastFood", avgCost: 45000, weight: 2, url: "https://naver.me/5tJuhyqx", img: "images/brooklyn-jamsil.jpg",  open: "10:30", close: "21:00" },
     { name: "Oreno Ramen Lotte World Mall",category: "noodles",  avgCost: 30000, weight: 2, url: "https://naver.me/FRLFr9WT", img: "images/oreno-jamsil.jpg",     open: "10:30", close: "22:00" },
     { name: "Hankookjib Bibimbap",          category: "korean",   avgCost: 30000, weight: 2, url: "",                            img: "images/hankookjib-jamsil.jpg",open: "–",      close: "–"      },
     { name: "Dimdimseom",                  category: "chinese",  avgCost: 25000, weight: 1, url: "https://naver.me/FjbpxnN8", img: "images/dimdimseom-jamsil.jpg",open: "10:30", close: "22:00" },
@@ -358,7 +358,7 @@ function playSpinSound(){
 }
 /* === BILL-SPLIT WHEEL ============================================= */
 const PAY_MANDATORY = [
-  {label:'50 / 50 split', weight:35},
+  {label:'50 / 50 split', weight:30},
   {label:'Eddie pays 💸',   weight:25},
   {label:'Ellie pays 😬',    weight: 10}
 ];
@@ -429,29 +429,35 @@ function buildPayWheel(segmentArr){
   /* ---------- Winwheel segments ---------- */
   const totalW   = segmentArr.reduce((a,b)=>a + b.weight,0);
   const segments = segmentArr.map(seg => {
-  /* ▼ split the label at the *first* space that gives    */
-  /*   two lines of ≤10 characters each (fallback: as‑is) */
-  const words = seg.label.split(' ');
+  /* ── split into two balanced lines ───────────────────────── */
+  const words   = seg.label.split(' ');
   let line1 = seg.label, line2 = '';
-  for (let i = 1; i < words.length; i++){
-      const a = words.slice(0,i).join(' ');
-      const b = words.slice(i).join(' ');
-      if (a.length <= 10 && b.length <= 10){ line1=a; line2=b; break; }
+
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i).join(' ');
+    const b = words.slice(i).join(' ');
+    if (a.length <= 12 && b.length <= 12) {   // ≤ 12 chars per line
+      line1 = a; line2 = b; break;
+    }
   }
 
-  /* font size: 14 px for 2‑line labels, otherwise 16 px  */
-  const fontSize = line2 ? 14 : 16;
+  /* ── narrower font + margin keeps text off the rim ───────── */
+  const twoLines   = !!line2;
+  const fontSize   = twoLines ? 12 : 14;      // px
+  const textMargin = twoLines ? 56 : 48;      // move inwards a bit
 
   return {
-    text            : line1 + (line2 ? '\n' + line2 : ''),
-    size            : 360 * seg.weight / totalW,
-    fillStyle       : pickColor(),
-    textFontSize    : fontSize,
-    textAlignment   : 'outer',
-    textOrientation : 'horizontal',
-    textFillStyle   : '#333'
+    text              : twoLines ? line1 + '\n' + line2 : line1,
+    size              : 360 * seg.weight / totalW,
+    fillStyle         : pickColor(),
+    textFontSize      : fontSize,
+    textAlignment     : 'outer',
+    textOrientation   : 'horizontal',
+    textFillStyle     : '#333',
+    textMargin
   };
 });
+);
 
   /* ---------- create & spin ---------- */
   const wheel = new Winwheel({
