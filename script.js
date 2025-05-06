@@ -1,3 +1,4 @@
+
 // script.js
 const $ = id => document.getElementById(id);
 
@@ -1045,5 +1046,4 @@ $('back-btn').onclick = () => {
   $('method-section').hidden  = false;
   $('wheel-wrap').hidden      = true;   // hide wheel before leaving
 };
-
 
