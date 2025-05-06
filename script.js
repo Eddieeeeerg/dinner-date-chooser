@@ -1,58 +1,5 @@
 // script.js
 const $ = id => document.getElementById(id);
-/* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
-(() => {
-  const intro = $('#intro-overlay');
-  const login = $('#login-overlay');
-  const video = $('#introVid');
-  const wrap  = $('#vid-wrap');
-  const heart = $('#megaHeart');
-
-  /* 1 – once metadata is ready, schedule the drop 4.5 s in */
-  video.addEventListener('loadedmetadata', () => {
-    video.play().catch(()=>{});                 // make sure it autoplays
-    setTimeout(dropSequence, 4500);             // 4.5 s mark
-  });
-
-  /* 2 – heart drops, pushes video, then grows & fades */
-  function dropSequence(){
-    wrap.classList.add('push-spin');            // spin + fall video
-    heart.classList.add('drop-in');             // heart slides to centre
-
-    // fling the 4 corner hearts away
-    document.querySelectorAll('.border-heart')
-            .forEach(h => h.classList.add('spread-away'));
-
-    /* after 3 s pause, engulf and fade */
-    setTimeout(()=>{
-      heart.classList.add('grow-cover');
-      setTimeout(()=>heart.classList.add('fade-away'), 1400);
-    }, 3000);
-  }
-
-  /* 3 – clip ended → black fades to login */
-  video.addEventListener('ended', () => {
-    intro.classList.add('fade');
-    setTimeout(()=>{ intro.remove(); login.hidden = false; }, 900);
-  });
-
-  /* ==== PASSWORD GATE ============================================ */
-  const OK  = '010107';
-  const pw  = $('#loginPw');
-  const btn = $('#loginBtn');
-  const err = $('#loginErr');
-  const unlock = () =>{
-    if(pw.value.trim() === OK){
-      login.classList.add('fade');
-      setTimeout(()=>{
-        login.remove();
-        launchHeartBubbles();          // bubbles only now
-      }, 900);
-    } else err.style.display = 'block';
-  };
-  btn.onclick      = unlock;
-  pw.onkeydown     = e => { if(e.key === 'Enter') unlock(); };
-})();
 
 console.log('🔥 script.js loaded');
 // ====== UTILITY ======
@@ -125,6 +72,50 @@ const restaurantData = {
 
 // ====== INITIALIZATION ======
 window.addEventListener('DOMContentLoaded', () => {
+   /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
+  (() => {
+    const intro = $('#intro-overlay');
+    const login = $('#login-overlay');
+    const video = $('#introVid');
+    const wrap  = $('#vid-wrap');
+    const heart = $('#megaHeart');
+
+    /* 1 – start video, schedule heart drop at 4.5 s */
+    video.play().catch(()=>{});
+    setTimeout(dropSequence, 4500);
+
+    function dropSequence(){
+      wrap.classList.add('push-spin');
+      heart.classList.add('drop-in');
+      document.querySelectorAll('.border-heart')
+              .forEach(h => h.classList.add('spread-away'));
+      setTimeout(()=>{
+        heart.classList.add('grow-cover');
+        setTimeout(()=>heart.classList.add('fade-away'), 1400);
+      }, 3000);
+    }
+
+    video.addEventListener('ended', () => {
+      intro.classList.add('fade');
+      setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
+    });
+
+    /* ==== PASSWORD ==== */
+    const OK  = '010107';
+    const pw  = $('#loginPw');
+    const btn = $('#loginBtn');
+    const err = $('#loginErr');
+    const unlock = () =>{
+      if(pw.value.trim() === OK){
+        login.classList.add('fade');
+        setTimeout(()=>{
+          login.remove();
+          launchHeartBubbles();
+        }, 900);
+      } else err.hidden = false;
+    };
+    btn.onclick = unlock;
+    pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
   renderAreas();
 initBudgetSlider(); 
 refreshAreaAvailability();
