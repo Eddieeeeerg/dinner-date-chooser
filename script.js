@@ -72,7 +72,7 @@ const restaurantData = {
 
 // ====== INITIALIZATION ======
 window.addEventListener('DOMContentLoaded', () => {
-   /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
+  /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
   (() => {
     const intro = $('#intro-overlay');
     const login = $('#login-overlay');
@@ -80,24 +80,27 @@ window.addEventListener('DOMContentLoaded', () => {
     const wrap  = $('#vid-wrap');
     const heart = $('#megaHeart');
 
-    /* 1 – start video, schedule heart drop at 4.5 s */
-    video.play().catch(()=>{});
+    /* 1 – start video, schedule heart drop at 4.5 s */
+    video.play().catch(() => {});
     setTimeout(dropSequence, 4500);
 
-    function dropSequence(){
+    function dropSequence() {
       wrap.classList.add('push-spin');
       heart.classList.add('drop-in');
       document.querySelectorAll('.border-heart')
               .forEach(h => h.classList.add('spread-away'));
-      setTimeout(()=>{
+      setTimeout(() => {
         heart.classList.add('grow-cover');
-        setTimeout(()=>heart.classList.add('fade-away'), 1400);
+        setTimeout(() => heart.classList.add('fade-away'), 1400);
       }, 3000);
     }
 
     video.addEventListener('ended', () => {
       intro.classList.add('fade');
-      setTimeout(()=>{ intro.remove(); login.hidden=false; }, 900);
+      setTimeout(() => { 
+        intro.remove(); 
+        login.hidden = false; 
+      }, 900);
     });
 
     /* ==== PASSWORD ==== */
@@ -105,23 +108,29 @@ window.addEventListener('DOMContentLoaded', () => {
     const pw  = $('#loginPw');
     const btn = $('#loginBtn');
     const err = $('#loginErr');
-    const unlock = () =>{
-      if(pw.value.trim() === OK){
+    const unlock = () => {
+      if (pw.value.trim() === OK) {
         login.classList.add('fade');
-        setTimeout(()=>{
+        setTimeout(() => {
           login.remove();
           launchHeartBubbles();
         }, 900);
-      } else err.hidden = false;
+      } else {
+        err.hidden = false;
+      }
     };
-    btn.onclick = unlock;
-    pw.onkeydown = e => { if(e.key==='Enter') unlock(); };
+    btn.onclick     = unlock;
+    pw.onkeydown    = e => { if (e.key === 'Enter') unlock(); };
+  })();    // ← closes & invokes the INTRO IIFE
+
+  // your app initialization
   renderAreas();
-initBudgetSlider(); 
-refreshAreaAvailability();
-initMethodChooser();
+  initBudgetSlider();
+  refreshAreaAvailability();
+  initMethodChooser();
   $('reset-btn').addEventListener('click', resetAll);
 });
+
 
 
 
