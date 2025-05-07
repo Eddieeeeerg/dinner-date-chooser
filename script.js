@@ -73,10 +73,14 @@ const restaurantData = {
 
 // ====== INITIALIZATION ======
 window.addEventListener('DOMContentLoaded', () => {
-  const $ = id => document.getElementById(id);
+  // helper that accepts **either** "introVid" or "#introVid"
+  const $ = sel =>
+    sel.startsWith('#') ? document.querySelector(sel)
+    : document.getElementById(sel);
+  
   console.log('🔥 script.js loaded');
 
-  const video = $.call(document, 'introVid'); // or const video = document.getElementById('introVid');
+  const video = $('introVid');
   if (video) video.play();
   /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
   (() => {
