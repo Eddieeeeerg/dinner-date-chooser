@@ -80,6 +80,8 @@ window.addEventListener('DOMContentLoaded', () => {
   
   console.log('🔥 script.js loaded');
 
+   const el = id => document.getElementById(id);
+
   const video = $('introVid');
   if (video) video.play();
   /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
@@ -124,6 +126,9 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           login.remove();
           launchHeartBubbles();
+          // show the real site now
+          document.querySelector('header').hidden = false;
+          document.querySelector('main').hidden   = false;
         }, 900);
       } else {
         err.hidden = false;
@@ -138,7 +143,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initBudgetSlider();
   refreshAreaAvailability();
   initMethodChooser();
-  $('reset-btn').addEventListener('click', resetAll);
+  el('reset-btn').addEventListener('click', resetAll);
 });
 
 
@@ -220,23 +225,23 @@ function makeResultCard(r){
 /* -------------------------------------------------- RANDOM PICK ---- */
 function showRandom(area, level){
   // make sure every visual left‑over is gone
-  $('wheel-wrap').hidden = true;
-  $('wheelcanvas').style.display = 'none';
-$('picker-content').innerHTML = '';
+  el('wheel-wrap').hidden = true;
+  el('wheelcanvas').style.display = 'none';
+el('picker-content').innerHTML = '';
 
   const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
 
   const winner = list[Math.floor(Math.random()*list.length)];
 
-  $('picker-title').textContent = 'Winner 🎉';
-  const container = $('picker-container');
+  el('picker-title').textContent = 'Winner 🎉';
+  const container = el('picker-container');
   container.innerHTML = '';                           // wipe others
 
   container.appendChild( makeResultCard(winner) );    // single card
   addPayButton(container, winner);
   /* clear any list that might have been shown previously */
-  $('picker-content').innerHTML = '';
+  el('picker-content').innerHTML = '';
 
   /*  🔸 fire the 5 % bill wheel logic right here  */
   maybeShowPayWheel(winner);
@@ -244,14 +249,14 @@ $('picker-content').innerHTML = '';
 
 
 function showList(area, level){
-  $('wheel-wrap').hidden        = true;
-  $('wheelcanvas').style.display = 'none';
+  el('wheel-wrap').hidden        = true;
+  el('wheelcanvas').style.display = 'none';
 
   const list = getFilteredList(area, level);
   if(!list.length){ pickerEmpty(); return; }
 
-  $('picker-title').textContent = 'All Options:';
-  const out = $('picker-content');
+  el('picker-title').textContent = 'All Options:';
+  const out = el('picker-content');
   out.innerHTML = '';
   list.forEach(r => {
   // when the user clicks a card, show its details + pay button
@@ -267,21 +272,21 @@ function showList(area, level){
 }
 
 function pickerEmpty(){
-  $('picker-title').textContent = 'No restaurants match that budget 😢';
-  $('picker-content').innerHTML = '';
+  el('picker-title').textContent = 'No restaurants match that budget 😢';
+  el('picker-content').innerHTML = '';
 }
 
 
 
 /* ─── METHOD‑CHOOSER wiring ─────────────────────────────────────────── */
 function initMethodChooser(){
-  $('method-buttons').addEventListener('click', e=>{
+  el('method-buttons').addEventListener('click', e=>{
     const btn = e.target.closest('button');
     if(!btn) return;
     const m = btn.dataset.method;
 
-    $('method-section').hidden = true;   // hide chooser
-    $('picker-section').hidden = false;  // show mechanic output
+    el('method-section').hidden = true;   // hide chooser
+    el('picker-section').hidden = false;  // show mechanic output
 
     if(m === 'wheel')       showWheel(currentArea, currentLevel);
     else if(m === 'random') showRandom(currentArea, currentLevel);
@@ -292,8 +297,8 @@ function initMethodChooser(){
 
 /* ─── back button inside picker section ─────────────────────────────── */
 $('back-btn').onclick = () => {
-  $('picker-section').hidden = true;
-  $('method-section').hidden = false;
+  el('picker-section').hidden = true;
+  el('method-section').hidden = false;
 };
 
 
@@ -325,7 +330,7 @@ function launchHeartBubbles() {
 // ====== PHASE 1: Render Area Cards ======
 function renderAreas() {
   console.log('1️⃣ renderAreas()');
-  const container = $('areas');
+  const container = el('areas')
   container.innerHTML = '';
 
   Object.keys(restaurantData).forEach(area => {
@@ -367,10 +372,10 @@ container.appendChild(any);
 function chooseHealth(area) {
   console.log('2️⃣ chooseHealth()', area);
   // hide area grid, show health grid
-  $('area-section').hidden     = true;
-  $('category-section').hidden = false;
+ el('area-section').hidden     = true;
+  el('category-section').hidden = false;
 
-  const container = $('health-options');
+  const container = el('health-options')
   container.innerHTML = '';
 
   ['Healthy', 'Less Healthy', 'All'].forEach(level => {
@@ -383,11 +388,11 @@ function chooseHealth(area) {
 }
 // ====== PHASE 3: show the Method Chooser ======
 function startPicker(area, level) {
-  currentArea  = area;
+    = area;
   currentLevel = level;
 
-  $('category-section').hidden = true;   // hide Healthy/Less/All
-  $('method-section').hidden   = false;  // show Wheel / Random / Cards / All
+  el('category-section').hidden = true;   // hide Healthy/Less/All
+  el('method-section').hidden   = false;  // show Wheel / Random / Cards / All
 }
 
 
@@ -395,14 +400,14 @@ function startPicker(area, level) {
 
 // ====== DISPATCH ======
 function launchMechanic(mech, area, level) {
-  $('picker-title').textContent = {
+  el('picker-title').textContent = {
     wheel:   'Spin the Wheel!',
     scratch: 'Scratch & Win!',
     cards:   'Pick a Card!',
     list:    'All Options:'
   }[mech];
 
-  const container = $('picker-container');
+  const container = el('picker-container');
   container.innerHTML = '';
 
   if      (mech === 'list')    showList(area, level);
@@ -421,7 +426,7 @@ function shuffle(array) {
 }
 // ─── helper: play the spin sound ───────────────────────────────────────
 function playSpinSound(){
-  const snd = $('spin-audio');
+  const snd = el('spin-audio');
   snd.currentTime = 0;
   snd.play().catch(()=>{});          // ignore autoplay blocking on some mobiles
 }
@@ -600,12 +605,12 @@ function addPayButton(where, rest){
 
 // ====== SPINNING WHEEL v2 ==============================================
 function showWheel(area, level){
-  const title = $('picker-title');
-  const box   = $('picker-container');
+  const title = el('picker-title');
+  const box   = el('picker-container');
   box.innerHTML = '';                     // clear cards
-  $('picker-content').innerHTML = '';
-  $('wheel-wrap').hidden = false;         // show wrapper
-  $('wheelcanvas').style.display='none';  // hide until dice rolled
+  el('picker-content').innerHTML = '';
+  el('wheel-wrap').hidden = false;         // show wrapper
+  el('wheelcanvas').style.display='none';  // hide until dice rolled
 
   // ---------- 1. filtered list ----------
   let list = area==='ANY' ? Object.values(restaurantData).flat()
@@ -614,7 +619,7 @@ function showWheel(area, level){
   if(level==='Healthy')      list=list.filter(r=>r.avgCost<=30000);
   else if(level==='Less Healthy') list=list.filter(r=>r.avgCost>30000);
 
-  if(!list.length){ pickerEmpty(); $('wheel-wrap').hidden=true; return; }
+  if(!list.length){ pickerEmpty(); el('wheel-wrap').hidden=true; return; }
 
   // ---------- 2. dice button ----------
   title.textContent = 'Tap the die to get your spins!';
@@ -632,7 +637,7 @@ function flashPlusOne(){
   const plus = document.createElement('span');
   plus.textContent = '+1';
   plus.className = 'plus-one';
-  $('wheel-wrap').appendChild(plus);
+  el('wheel-wrap').appendChild(plus);
   setTimeout(()=>plus.remove(), 1400);
 }
 
@@ -640,15 +645,15 @@ function flashLucky(){
   const msg = document.createElement('div');
   msg.id = 'lucky-msg';
   msg.textContent = 'You\'re going to have a lucky day, Ellie ✨';
-  $('wheel-wrap').appendChild(msg);
+  el('wheel-wrap').appendChild(msg);
   setTimeout(()=>msg.remove(), 1600);
 }
 function startWheel(list, spinsLeft){
-  const title = $('picker-title');
-  const box   = $('picker-container');
+  const title = el('picker-title');
+  const box   = el('picker-container');
   box.innerHTML = '';
-  $('wheelcanvas').style.display='block';
-  $('wheel-wrap').classList.remove('spinning');
+  el('wheelcanvas').style.display='block';
+  el('wheel-wrap').classList.remove('spinning');
   const resultDiv = document.createElement('div');
   resultDiv.id = 'wheel-result';
   box.appendChild(resultDiv);
@@ -692,7 +697,7 @@ while(list.length < 6)
       duration:5,
       spins:Math.floor(Math.random()*3)+5,
       callbackFinished:(seg)=>{
-  $('wheel-wrap').classList.remove('spinning');
+  el('wheel-wrap').classList.remove('spinning');
 
   const pick = list.find(r => r.name.startsWith(seg.text.replace('…','')));
 
@@ -732,7 +737,7 @@ while(list.length < 6)
   if(spinsLeft === 0) return;
   playSpinSound();
 
-  $('wheel-wrap').classList.add('spinning');
+  el('wheel-wrap').classList.add('spinning');
 
   window.wheel.stopAnimation(false);
   window.wheel.rotationAngle = 0;
@@ -750,10 +755,10 @@ while(list.length < 6)
 // ====== SCRATCH & WIN ======
 function showScratch(area, level) {
   // hide wheel
-  $('wheelcanvas').style.display = 'none';
+  el('wheelcanvas').style.display = 'none';
 
   // clear container
-  const container = $('picker-container');
+  const container = el('picker-container');
   container.innerHTML = '';
 
   // pick 3 restaurants + 3 love-notes
@@ -815,8 +820,8 @@ function showScratch(area, level) {
 
 /* ====== FLIPPING CARDS 2.0 ========================================= */
 function showCards(area, level){
-  $('wheelcanvas').style.display = 'none';
-  const container = $('picker-container');
+  el('wheelcanvas').style.display = 'none';
+  const container = el('picker-container');
   container.innerHTML = '';
 
   const messages = shuffle([
@@ -976,7 +981,7 @@ deck = shuffle([
 
 // ====== RICH DETAILS PANEL ======
 function showDetails(r) {
-  const container = $('picker-container');
+  const container = el('picker-container');
   container.innerHTML = `
     <div class="details">
       <img src="${r.img}" alt="${r.name}" />
@@ -1004,10 +1009,10 @@ function getFilteredList(area, level) {
 
 // ====== Existing LIST fallback ======
 function showList(area, level) {
-  $('wheel-wrap').hidden         = true;
-  $('wheelcanvas').style.display = 'none';
-  $('picker-title').textContent  = 'All Options:';
-  const container = $('picker-container');
+  el('wheel-wrap').hidden         = true;
+  el('wheelcanvas').style.display = 'none';
+  el('picker-title').textContent  = 'All Options:';
+  const container = el('picker-container');
   container.innerHTML = '';
   let list = area==='ANY'
     ? Object.values(restaurantData).flat()
@@ -1039,20 +1044,20 @@ function showList(area, level) {
 function resetAll() {
   // if a pay-wheel overlay is showing, remove it
   document.getElementById('pay-overlay')?.remove();
-  $('picker-section').hidden   = true;
-  $('category-section').hidden = true;
-  $('area-section').hidden     = false;
-$('method-section').hidden = true;
-$('wheel-wrap').hidden = true;          
-$('wheel-wrap').innerHTML = '<div id="wheel-pointer">▼</div><canvas id="wheelcanvas" width="380" height="380"></canvas>';    
-  $('overlay-root').innerHTML = '';     
+  el('picker-section').hidden   = true;
+  el('category-section').hidden = true;
+  el('area-section').hidden     = false;
+el('method-section').hidden = true;
+el('wheel-wrap').hidden = true;          
+el('wheel-wrap').innerHTML = '<div id="wheel-pointer">▼</div><canvas id="wheelcanvas" width="380" height="380"></canvas>';    
+  el('overlay-root').innerHTML = '';     
   const co = document.getElementById('card-overlay'); 
   if (co) co.remove();                 
 }
 
-$('back-btn').onclick = () => {
-  $('picker-section').hidden = true;
-  $('method-section').hidden  = false;
-  $('wheel-wrap').hidden      = true;   // hide wheel before leaving
+el('back-btn').onclick = () => {
+  el('picker-section').hidden = true;
+  el('method-section').hidden  = false;
+  el('wheel-wrap').hidden      = true;   // hide wheel before leaving
 };
 
