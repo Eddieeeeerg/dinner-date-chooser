@@ -801,7 +801,7 @@ function showScratch(area, level) {
     container.appendChild(box);
 
     // initialize wScratchPad on the overlay
-    $(`#scratch-${i}`).wScratchPad({
+    jQuery(`#scratch-${i}`).wScratchPad({
       size:       40,
       bg:         '#ccc',
       fg:         '#ccc',
@@ -810,7 +810,7 @@ function showScratch(area, level) {
         if (percent > 60) {
           if (slot.type === 'rest') showDetails(slot.data);
           else                       alert(slot.data);
-          $(`#scratch-${i}`).wScratchPad('clear');
+          jQuery(`#scratch-${i}`).wScratchPad('clear');
         }
       }
     });
