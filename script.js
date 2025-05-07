@@ -1,6 +1,6 @@
 
 // script.js
-const $ = id => document.getElementById(id);
+
 
 console.log('🔥 script.js loaded');
 // ====== UTILITY ======
@@ -73,6 +73,11 @@ const restaurantData = {
 
 // ====== INITIALIZATION ======
 window.addEventListener('DOMContentLoaded', () => {
+  const $ = id => document.getElementById(id);
+  console.log('🔥 script.js loaded');
+
+  const video = $.call(document, 'introVid'); // or const video = document.getElementById('introVid');
+  if (video) video.play();
   /* ⇢⇢ INTRO FLOW v3 + PASSWORD  ==================================== */
   (() => {
     const intro = $('#intro-overlay');
